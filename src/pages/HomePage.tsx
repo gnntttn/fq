@@ -1,37 +1,29 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { BookOpen, Users, Clock } from 'lucide-react';
+import { BookCopy, Users, BookOpen, ArrowLeft, Heart } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { TasbeehCarousel } from '../components/home/TasbeehCarousel';
+import { Greeting } from '../components/home/Greeting';
+import { themedAyatCollections } from '../data/themedAyat';
+import { VerseOfTheDay } from '../components/home/VerseOfTheDay';
 
 export function HomePage() {
   const { t } = useLanguage();
 
   const quickActions = [
+    { to: '/surahs', text: t('surahs'), icon: BookCopy },
     { to: '/juzs', text: t('juzs'), icon: BookOpen },
     { to: '/reciters', text: t('reciters'), icon: Users },
-    { to: '/prayer-times', text: t('prayerTimes'), icon: Clock },
   ];
 
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8 space-y-8">
-        {/* Welcome Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-primary/10 dark:bg-primary/20 border border-primary/20 dark:border-primary/50 text-white rounded-2xl p-8 text-center"
-        >
-          <h1 className="text-4xl font-bold font-arabic mb-2 text-primary-dark dark:text-white dark:text-shadow-glow-md" style={{ textShadow: '0 0 15px rgba(49, 130, 206, 0.7)' }}>{t('main_title')}</h1>
-          <p className="text-primary dark:text-primary-light/80">{t('main_subtitle')}</p>
-        </motion.div>
+        <Greeting />
+        
+        <VerseOfTheDay />
 
-        {/* Tasbeeh Carousel */}
-        <TasbeehCarousel />
-
-        {/* Quick Actions */}
         <div className="grid grid-cols-3 gap-4">
           {quickActions.map((action, index) => (
             <motion.div
@@ -51,25 +43,55 @@ export function HomePage() {
           ))}
         </div>
 
-        {/* Continue Reading / Last Read */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: 0.3 }}
         >
-          <Link
-            to="/surahs"
-            className="block bg-white dark:bg-space-200/30 dark:backdrop-blur-sm border border-gray-200 dark:border-space-100/50 rounded-2xl p-6 transition-all duration-300 hover:border-primary-light dark:hover:border-accent-dark hover:shadow-lg dark:hover:shadow-glow-sm"
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('featured_topics')}</h2>
+            <Link to="/topics" className="text-sm font-semibold text-primary dark:text-primary-light hover:text-accent-light flex items-center gap-1">
+              {t('view_all')} <ArrowLeft size={16} />
+            </Link>
+          </div>
+          <div className="space-y-3">
+            {themedAyatCollections.slice(0, 2).map((collection) => {
+              const Icon = collection.icon;
+              return (
+                <Link key={collection.id} to={`/topics/${collection.id}`} className="block bg-white dark:bg-space-200/30 dark:backdrop-blur-sm border border-gray-200 dark:border-space-100/50 rounded-xl p-4 transition-all duration-300 hover:border-primary-light dark:hover:border-accent-dark hover:shadow-md dark:hover:shadow-glow-sm">
+                  <div className="flex items-center gap-4">
+                    <Icon className="text-primary-dark dark:text-primary-light" size={20} />
+                    <span className="font-semibold text-gray-800 dark:text-gray-200">{t(collection.titleKey)}</span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </motion.div>
+        
+        <Link to="/rabbana-duas">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="block bg-white dark:bg-space-200/30 dark:backdrop-blur-sm border border-gray-200 dark:border-space-100/50 rounded-xl p-6 transition-all duration-300 hover:border-primary-light dark:hover:border-accent-dark hover:shadow-lg dark:hover:shadow-glow-sm"
           >
             <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">{t('browse_surahs')}</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">{t('browse_surahs_desc')}</p>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-red-100 dark:bg-red-500/20 rounded-lg flex items-center justify-center">
+                  <Heart className="text-red-500 dark:text-red-300" size={28} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">{t('rabbana_duas')}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('rabbana_duas_desc')}</p>
+                </div>
               </div>
-              <BookOpen className="text-primary-dark dark:text-primary-light" size={32} />
+              <ArrowLeft size={20} className="text-gray-400 dark:text-gray-500 shrink-0" />
             </div>
-          </Link>
-        </motion.div>
+          </motion.div>
+        </Link>
+        
+        <TasbeehCarousel />
       </div>
     </div>
   );

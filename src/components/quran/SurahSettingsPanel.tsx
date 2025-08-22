@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Plus, Minus } from 'lucide-react';
 import { Reciter } from '../../types/quran';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -12,6 +12,8 @@ interface SurahSettingsPanelProps {
   onReciterChange: (id: string) => void;
   showTranslations: boolean;
   onShowTranslationsChange: (show: boolean) => void;
+  fontSize: number;
+  onFontSizeChange: (size: number) => void;
 }
 
 export function SurahSettingsPanel({
@@ -22,8 +24,12 @@ export function SurahSettingsPanel({
   onReciterChange,
   showTranslations,
   onShowTranslationsChange,
+  fontSize,
+  onFontSizeChange,
 }: SurahSettingsPanelProps) {
   const { t, language, dir } = useLanguage();
+  const MIN_FONT_SIZE = 18;
+  const MAX_FONT_SIZE = 48;
 
   return (
     <AnimatePresence>
@@ -90,6 +96,28 @@ export function SurahSettingsPanel({
                   </label>
                 </div>
               )}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  {t('font_size')}
+                </label>
+                <div className="flex items-center justify-between bg-gray-100 dark:bg-space-300/50 border border-gray-300 dark:border-space-100 rounded-xl p-2">
+                  <button 
+                    onClick={() => onFontSizeChange(Math.max(MIN_FONT_SIZE, fontSize - 2))}
+                    className="p-2 text-gray-500 dark:text-gray-400 hover:text-accent-light hover:bg-gray-200 dark:hover:bg-space-100/50 rounded-full transition-colors"
+                  >
+                    <Minus size={20} />
+                  </button>
+                  <span className="text-lg font-bold text-gray-800 dark:text-gray-200 w-12 text-center">{fontSize}px</span>
+                  <button 
+                    onClick={() => onFontSizeChange(Math.min(MAX_FONT_SIZE, fontSize + 2))}
+                    className="p-2 text-gray-500 dark:text-gray-400 hover:text-accent-light hover:bg-gray-200 dark:hover:bg-space-100/50 rounded-full transition-colors"
+                  >
+                    <Plus size={20} />
+                  </button>
+                </div>
+              </div>
+
             </div>
           </motion.div>
         </motion.div>

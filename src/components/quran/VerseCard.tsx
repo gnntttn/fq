@@ -13,6 +13,7 @@ interface VerseCardProps {
   isPlaying?: boolean;
   onPlay?: () => void;
   showTranslation?: boolean;
+  arabicFontSize: number;
 }
 
 export function VerseCard({ 
@@ -21,7 +22,8 @@ export function VerseCard({
   index, 
   isPlaying, 
   onPlay,
-  showTranslation = true 
+  showTranslation = true,
+  arabicFontSize
 }: VerseCardProps) {
   const [bookmarks, setBookmarks] = useLocalStorage<string[]>('quran-bookmarks', []);
   const [showNote, setShowNote] = useState(false);
@@ -59,7 +61,10 @@ export function VerseCard({
             {verse.verseNumber}
           </div>
           
-          <p className="flex-1 text-2xl lg:text-3xl leading-loose text-right font-arabic text-gray-900 dark:text-gray-100 selection:bg-primary/20 dark:selection:bg-primary/30 px-4">
+          <p 
+            className="flex-1 text-2xl lg:text-3xl leading-loose text-right font-arabic text-gray-900 dark:text-gray-100 selection:bg-primary/20 dark:selection:bg-primary/30 px-4"
+            style={{ fontSize: `${arabicFontSize}px`, lineHeight: 1.8 }}
+          >
             {verse.textUthmani}
           </p>
         </div>

@@ -26,6 +26,7 @@ export function SurahPage() {
   const [reciters, setReciters] = useState<Reciter[]>([]);
   const [selectedReciter, setSelectedReciter] = useLocalStorage<string>('selected-reciter-id', '7');
   const [showTranslations, setShowTranslations] = useLocalStorage('show-translations', true);
+  const [arabicFontSize, setArabicFontSize] = useLocalStorage('arabic-font-size', 28);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const [currentPlayingVerse, setCurrentPlayingVerse] = useState<number | null>(null);
@@ -199,6 +200,7 @@ export function SurahPage() {
                 isPlaying={currentPlayingVerse === verse.verseNumber}
                 onPlay={() => handleVersePlay(verse)}
                 showTranslation={showTranslations && language !== 'ar'}
+                arabicFontSize={arabicFontSize}
               />
             </div>
           ))}
@@ -213,6 +215,8 @@ export function SurahPage() {
         onReciterChange={setSelectedReciter}
         showTranslations={showTranslations}
         onShowTranslationsChange={setShowTranslations}
+        fontSize={arabicFontSize}
+        onFontSizeChange={setArabicFontSize}
       />
 
       {audioSrc && currentPlayingVerse && (

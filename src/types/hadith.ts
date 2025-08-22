@@ -1,9 +1,12 @@
 export interface Hadith {
-  id: string;
-  hadith_english: string;
-  hadith_arabic: string;
-  chapter_english: string;
-  chapter_arabic: string;
-  book_english: string;
-  book_arabic: string;
+  id: number;
+  title_ar: string;
+  title_en: string;
+  title_fr: string;
+  hadith_ar: string;
+  hadith_en: string;
+  hadith_fr: string;
+  explanation_ar: string;
+  explanation_en: string;
+  explanation_fr: string;
 }
