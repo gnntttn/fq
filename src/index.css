@@ -7,29 +7,7 @@
     @apply bg-gray-50 text-gray-800 dark:bg-space-300 dark:text-gray-200 transition-colors duration-300;
     -webkit-tap-highlight-color: transparent;
   }
-  
-  html.dark body {
-     background-image: 
-      radial-gradient(at 27% 37%, hsla(215, 98%, 61%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 97% 21%, hsla(177, 98%, 61%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 52% 99%, hsla(255, 96%, 62%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 10% 29%, hsla(215, 98%, 61%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 97% 96%, hsla(177, 98%, 61%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 33% 50%, hsla(255, 96%, 62%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 79% 53%, hsla(215, 98%, 61%, 0.1) 0px, transparent 50%);
-     animation: aurora 20s infinite linear;
-  }
 }
-
-@keyframes aurora {
-  from {
-    background-position: 0% 50%, 0% 50%, 0% 50%, 0% 50%, 0% 50%, 0% 50%, 0% 50%;
-  }
-  to {
-    background-position: 350% 50%, 350% 50%, 350% 50%, 350% 50%, 350% 50%, 350% 50%, 350% 50%;
-  }
-}
-
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
