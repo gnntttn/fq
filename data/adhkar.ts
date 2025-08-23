@@ -1,0 +1,66 @@
+import { Dhikr } from '../types/adhkar';
+
+export const adhkarData: Dhikr[] = [
+  // Morning Adhkar
+  {
+    id: 1,
+    category: 'morning',
+    arabic: 'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ...',
+    transliteration: 'Aṣbaḥnā wa aṣbaḥal-mulku lillāh, walḥamdulillāh, lā ilāha illallāh waḥdahu lā sharīka lah, lahul-mulku wa lahul-ḥamdu wa huwa `alā kulli shay’in qadīr...',
+    translation_en: 'We have reached the morning and at this very time all sovereignty belongs to Allah, and all praise is for Allah. None has the right to be worshipped except Allah, alone, without partner, to Him belongs all sovereignty and praise and He is over all things omnipotent.',
+    translation_fr: 'Nous avons atteint le matin et en ce moment même, toute la souveraineté appartient à Allah, et toute louange est à Allah. Nul n\'a le droit d\'être adoré sauf Allah, seul, sans partenaire, à Lui appartient toute la souveraineté et la louange et Il est sur toutes choses omnipotent.',
+    translation_ar: 'أصبحنا وأصبح الملك لله والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير. رب أسألك خير ما في هذا اليوم وخير ما بعده، وأعوذ بك من شر ما في هذا اليوم وشر ما بعده، رب أعوذ بك من الكسل وسوء الكبر، رب أعوذ بك من عذاب في النار وعذاب في القبر.',
+    count: 1,
+  },
+  {
+    id: 2,
+    category: 'morning',
+    arabic: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ.',
+    transliteration: 'Allāhumma bika aṣbaḥnā, wa bika amsaynā, wa bika naḥyā, wa bika namūt, wa ilaykan-nushūr.',
+    translation_en: 'O Allah, by You we have reached the morning and by You we have reached the evening, by You we live and by You we die, and to You is the resurrection.',
+    translation_fr: 'Ô Allah, par Toi nous avons atteint le matin et par Toi nous avons atteint le soir, par Toi nous vivons et par Toi nous mourons, et vers Toi est la résurrection.',
+    translation_ar: 'اللهم بك أصبحنا، وبك أمسينا، وبك نحيا، وبك نموت، وإليك النشور.',
+    count: 1,
+  },
+  {
+    id: 3,
+    category: 'morning',
+    arabic: 'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ: عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ.',
+    transliteration: 'Subḥānallāhi wa biḥamdih, `adada khalqih, wa riḍā nafsih, wa zinata `arshih, wa midāda kalimātih.',
+    translation_en: 'Glory is to Allah and praise is to Him, by the multitude of his creation, by His Pleasure, by the weight of His Throne, and by the extent of His Words.',
+    translation_fr: 'Gloire à Allah et louange à Lui, par la multitude de sa création, par Son Plaisir, par le poids de Son Trône, et par l\'étendue de Ses Paroles.',
+    translation_ar: 'سبحان الله وبحمده: عدد خلقه، ورضا نفسه، وزنة عرشه، ومداد كلماته.',
+    count: 3,
+  },
+  // Evening Adhkar
+  {
+    id: 4,
+    category: 'evening',
+    arabic: 'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ...',
+    transliteration: 'Amsaynā wa amsal-mulku lillāh, walḥamdulillāh, lā ilāha illallāh waḥdahu lā sharīka lah, lahul-mulku wa lahul-ḥamdu wa huwa `alā kulli shay’in qadīr...',
+    translation_en: 'We have reached the evening and at this very time all sovereignty belongs to Allah...',
+    translation_fr: 'Nous avons atteint le soir et en ce moment même, toute la souveraineté appartient à Allah...',
+    translation_ar: 'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ. رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا. رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ. رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ.',
+    count: 1,
+  },
+  {
+    id: 5,
+    category: 'evening',
+    arabic: 'اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ.',
+    transliteration: 'Allāhumma bika amsaynā, wa bika aṣbaḥnā, wa bika naḥyā, wa bika namūt, wa ilaykal-maṣīr.',
+    translation_en: 'O Allah, by You we have reached the evening and by You we have reached the morning, by You we live and by You we die, and to You is our final return.',
+    translation_fr: 'Ô Allah, par Toi nous avons atteint le soir et par Toi nous avons atteint le matin, par Toi nous vivons et par Toi nous mourons, et vers Toi est notre retour final.',
+    translation_ar: 'اللهم بك أمسينا، وبك أصبحنا، وبك نحيا، وبك نموت، وإليك المصير.',
+    count: 1,
+  },
+  {
+    id: 6,
+    category: 'evening',
+    arabic: 'أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ.',
+    transliteration: 'A`ūdhu bikalimātillāhit-tāmmāti min sharri mā khalaq.',
+    translation_en: 'I seek refuge in the perfect words of Allah from the evil of that which He has created.',
+    translation_fr: 'Je cherche refuge dans les paroles parfaites d\'Allah contre le mal de ce qu\'Il a créé.',
+    translation_ar: 'أعوذ بكلمات الله التامات من شر ما خلق.',
+    count: 3,
+  },
+];
