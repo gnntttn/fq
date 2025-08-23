@@ -10,9 +10,22 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { SurahSettingsPanel } from '../components/quran/SurahSettingsPanel';
 import { useLanguage } from '../context/LanguageContext';
 import { TAFSIR_RESOURCE_ID, translationMap } from '../lib/i18n';
-import { VerseSkeleton } from '../components/common/Skeleton';
+import { Skeleton } from '../components/common/Skeleton';
 
 const AUDIO_BASE_URL = 'https://verses.quran.com/';
+
+const VerseCardSkeleton = () => (
+  <div className="bg-white/30 dark:bg-space-200/20 border border-gray-200 dark:border-space-100/50 rounded-xl p-4">
+    <div className="flex items-start justify-between mb-4">
+      <Skeleton className="w-8 h-8 rounded-lg shrink-0" />
+      <div className="flex-1 px-4 text-right">
+        <Skeleton className="h-8 w-full mb-2 rounded-md" />
+        <Skeleton className="h-8 w-3/4 ml-auto rounded-md" />
+      </div>
+    </div>
+    <Skeleton className="h-4 w-full rounded-md" />
+  </div>
+);
 
 export function SurahPage() {
   const { id } = useParams<{ id: string }>();
@@ -121,13 +134,8 @@ export function SurahPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-white/30 dark:bg-space-200/20 p-4 rounded-xl animate-pulse mb-6">
-          <div className="h-10 w-3/4 mx-auto bg-gray-300 dark:bg-space-100/50 rounded-md"></div>
-        </div>
-        <div className="space-y-4">
-          {Array.from({ length: 5 }).map((_, i) => <VerseSkeleton key={i} index={i} />)}
-        </div>
+      <div className="container mx-auto px-4 py-8 space-y-4">
+        {Array.from({ length: 5 }).map((_, i) => <VerseCardSkeleton key={i} />)}
       </div>
     );
   }

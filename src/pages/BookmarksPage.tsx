@@ -7,9 +7,22 @@ import { Verse, Surah } from '../types/quran';
 import { VerseCard } from '../components/quran/VerseCard';
 import { useLanguage } from '../context/LanguageContext';
 import { TAFSIR_RESOURCE_ID, translationMap } from '../lib/i18n';
-import { VerseSkeleton } from '../components/common/Skeleton';
+import { Skeleton } from '../components/common/Skeleton';
 
 type BookmarkedVerse = Verse & { surah: Surah };
+
+const VerseCardSkeleton = () => (
+  <div className="bg-white/30 dark:bg-space-200/20 border border-gray-200 dark:border-space-100/50 rounded-xl p-4">
+    <div className="flex items-start justify-between mb-4">
+      <Skeleton className="w-8 h-8 rounded-lg shrink-0" />
+      <div className="flex-1 px-4 text-right">
+        <Skeleton className="h-8 w-full mb-2 rounded-md" />
+        <Skeleton className="h-8 w-3/4 ml-auto rounded-md" />
+      </div>
+    </div>
+    <Skeleton className="h-4 w-full rounded-md" />
+  </div>
+);
 
 export function BookmarksPage() {
   const { t, language } = useLanguage();
@@ -67,8 +80,8 @@ export function BookmarksPage() {
         </motion.div>
 
         {loading ? (
-          <div className="space-y-4">
-            {Array.from({ length: 3 }).map((_, i) => <VerseSkeleton key={i} index={i} />)}
+           <div className="space-y-6">
+            {Array.from({ length: 3 }).map((_, i) => <VerseCardSkeleton key={i} />)}
           </div>
         ) : bookmarkedVerses.length > 0 ? (
           <div className="space-y-6">

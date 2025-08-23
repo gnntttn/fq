@@ -2,8 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { asmaulHusnaList } from '../data/asmaulhusna';
 import { NameCard } from '../components/asmaulhusna/NameCard';
+import { asmaulHusnaList } from '../data/asmaulhusna';
 
 export function AsmaulHusnaPage() {
   const { t } = useLanguage();

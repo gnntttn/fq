@@ -5,6 +5,19 @@ import { quranApi } from '../services/quranApi';
 import { Reciter } from '../types/quran';
 import { ReciterCard } from '../components/quran/ReciterCard';
 import { useLanguage } from '../context/LanguageContext';
+import { Skeleton } from '../components/common/Skeleton';
+
+const ReciterCardSkeleton = () => (
+  <div className="bg-white dark:bg-space-200/30 border border-gray-200 dark:border-space-100/50 rounded-xl p-6">
+    <div className="flex items-start justify-between">
+      <div>
+        <Skeleton className="h-5 w-32 mb-2 rounded" />
+        <Skeleton className="h-4 w-24 rounded" />
+      </div>
+      <Skeleton className="w-6 h-6 rounded-full" />
+    </div>
+  </div>
+);
 
 export function RecitersPage() {
   const [reciters, setReciters] = useState<Reciter[]>([]);
@@ -44,17 +57,6 @@ export function RecitersPage() {
     setFilteredReciters(filtered);
   };
 
-  if (loading) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-light mx-auto"></div>
-          <p className="mt-4 text-gray-700 dark:text-gray-300">{t('loading_reciters')}</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
@@ -89,13 +91,19 @@ export function RecitersPage() {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredReciters.map((reciter, index) => (
-            <ReciterCard key={reciter.id} reciter={reciter} index={index} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => <ReciterCardSkeleton key={i} />)}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredReciters.map((reciter, index) => (
+              <ReciterCard key={reciter.id} reciter={reciter} index={index} />
+            ))}
+          </div>
+        )}
 
-        {filteredReciters.length === 0 && (
+        {!loading && filteredReciters.length === 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { AppWindow, Bookmark, BookCheck, BrainCircuit, BookMarked, Users, Sparkles, Target, BookUser, ScrollText, Shield, SunMoon, BookLock, AudioLines, Telescope, Library, BookOpen as SeerahIcon, PersonStanding, BookText as GlossaryIcon, Users2 } from 'lucide-react';
+import { AppWindow, Bookmark, BookCheck, BrainCircuit, BookMarked, Users, Sparkles, Target, BookUser, ScrollText, Shield, SunMoon, BookLock, AudioLines, Telescope, Library, BookOpen as SeerahIcon, PersonStanding, BookText as GlossaryIcon, Users2, LayoutGrid, BookOpenText } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { MoreLinkCard } from '../components/more/MoreLinkCard';
 
@@ -8,9 +8,11 @@ export function MorePage() {
   const { t } = useLanguage();
 
   const moreLinks = [
+    { to: '/tafsir', title: t('tafsir_nav_title'), subtitle: t('tafsir_page_subtitle'), icon: BookOpenText, color: 'bg-teal-500' },
     { to: '/seerah', title: t('seerah_title'), subtitle: t('seerah_subtitle'), icon: SeerahIcon, color: 'bg-stone-500' },
     { to: '/companion-stories', title: t('companion_stories_title'), subtitle: t('companion_stories_subtitle'), icon: Users2, color: 'bg-orange-500' },
     { to: '/prophet-stories', title: t('prophet_stories_title'), subtitle: t('prophet_stories_subtitle'), icon: BookUser, color: 'bg-cyan-500' },
+    { to: '/topics', title: t('topics_page_title'), subtitle: t('topics_page_subtitle'), icon: LayoutGrid, color: 'bg-orange-400' },
     { to: '/dua-library', title: t('dua_library_title'), subtitle: t('dua_library_subtitle'), icon: Library, color: 'bg-pink-500' },
     { to: '/adhkar', title: t('adhkar_title'), subtitle: t('adhkar_subtitle'), icon: SunMoon, color: 'bg-amber-500' },
     { to: '/hisnul-muslim', title: t('hisnul_muslim_title'), subtitle: t('hisnul_muslim_subtitle'), icon: BookLock, color: 'bg-lime-500' },

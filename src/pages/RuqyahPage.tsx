@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Loader, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { ShieldCheck, Loader } from 'lucide-react';
 import { quranApi } from '../services/quranApi';
 import { Verse, Surah } from '../types/quran';
 import { VerseCard } from '../components/quran/VerseCard';
@@ -59,17 +58,6 @@ export function RuqyahPage() {
     fetchVerses();
   }, [language]);
 
-  if (loading) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Loader className="animate-spin text-accent-light mx-auto" size={48} />
-          <p className="mt-4 text-gray-700 dark:text-gray-300">{t('loading_verses')}</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
@@ -87,18 +75,24 @@ export function RuqyahPage() {
           </p>
         </motion.div>
 
-        <div className="space-y-6">
-          {ruqyahVerses.map((item, index) => (
-            <VerseCard
-              key={item.verseKey}
-              verse={item}
-              surah={item.surah}
-              index={index}
-              showTranslation={language !== 'ar'}
-              arabicFontSize={28}
-            />
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex justify-center items-center py-16">
+            <Loader className="animate-spin text-accent-light" size={48} />
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {ruqyahVerses.map((item, index) => (
+              <VerseCard
+                key={item.verseKey}
+                verse={item}
+                surah={item.surah}
+                index={index}
+                showTranslation={language !== 'ar'}
+                arabicFontSize={28}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

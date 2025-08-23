@@ -5,7 +5,25 @@ import { quranApi } from '../services/quranApi';
 import { Surah } from '../types/quran';
 import { SurahCard } from '../components/quran/SurahCard';
 import { useLanguage } from '../context/LanguageContext';
-import { SkeletonCard } from '../components/common/Skeleton';
+import { Skeleton } from '../components/common/Skeleton';
+
+const SurahCardSkeleton = () => (
+  <div className="bg-white/30 dark:bg-space-200/20 border border-gray-200 dark:border-space-100/50 rounded-xl p-4">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center space-x-4 space-x-reverse">
+        <Skeleton className="w-10 h-10 rounded-lg" />
+        <div>
+          <Skeleton className="h-4 w-24 mb-2 rounded" />
+          <Skeleton className="h-3 w-32 rounded" />
+        </div>
+      </div>
+      <div className="text-right">
+        <Skeleton className="h-5 w-20 mb-2 rounded" />
+        <Skeleton className="h-3 w-16 rounded" />
+      </div>
+    </div>
+  </div>
+);
 
 export function SurahsPage() {
   const [surahs, setSurahs] = useState<Surah[]>([]);
@@ -80,7 +98,7 @@ export function SurahsPage() {
 
         {loading ? (
           <div className="space-y-3">
-             {Array.from({ length: 10 }).map((_, i) => <SkeletonCard key={i} index={i} />)}
+            {Array.from({ length: 10 }).map((_, i) => <SurahCardSkeleton key={i} />)}
           </div>
         ) : (
           <div className="space-y-3">
