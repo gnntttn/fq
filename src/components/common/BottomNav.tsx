@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, BookCopy, LayoutGrid, AppWindow } from 'lucide-react';
+import { Home, BookCopy, Radio, Tv2, AppWindow } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
 export function BottomNav() {
@@ -9,12 +9,13 @@ export function BottomNav() {
   const navLinks = [
     { to: '/', text: t('home'), icon: Home },
     { to: '/surahs', text: t('surahs'), icon: BookCopy },
-    { to: '/topics', text: t('topics'), icon: LayoutGrid },
+    { to: '/radios', text: t('radios_nav'), icon: Radio },
+    { to: '/tv', text: t('tv_nav'), icon: Tv2 },
     { to: '/more', text: t('more'), icon: AppWindow },
   ];
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `flex flex-col items-center gap-1 p-2 rounded-lg transition-all duration-300 w-20 ${
+    `flex flex-col items-center gap-1 p-2 rounded-lg transition-all duration-300 w-16 ${
       isActive ? 'text-accent-light' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
     }`;
 

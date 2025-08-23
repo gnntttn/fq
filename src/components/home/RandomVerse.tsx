@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Loader, BookOpen, Star } from 'lucide-react';
+import { BookOpen, Star } from 'lucide-react';
 import { quranApi } from '../../services/quranApi';
 import { Verse, Surah } from '../../types/quran';
 import { useLanguage } from '../../context/LanguageContext';
 import { verseOfTheDayKeys } from '../../data/verseOfTheDay';
 import { TAFSIR_RESOURCE_ID, translationMap } from '../../lib/i18n';
-import { VerseSkeleton } from '../common/Skeleton';
+import { Skeleton } from '../common/Skeleton';
 
 type RandomVerseData = Verse & { surah: Surah };
+
+const VerseSkeleton = () => (
+  <div className="h-32 flex flex-col items-center justify-center">
+    <Skeleton className="h-8 w-3/4 mb-4 rounded-md" />
+    <Skeleton className="h-4 w-1/2 mb-4 rounded-md" />
+    <Skeleton className="h-4 w-1/3 rounded-md" />
+  </div>
+);
 
 export function RandomVerse() {
   const { t, language } = useLanguage();
@@ -28,10 +36,10 @@ export function RandomVerse() {
       const versePromise = quranApi.getVerseByKey(verseKey, { translations: translationIds });
       const surahPromise = quranApi.getSurah(parseInt(surahIdStr, 10));
 
-      const [verseResult, surahResult] = await Promise.all([versePromise, surahPromise]);
+      const [verseResult, surahPromiseResult] = await Promise.all([versePromise, surahPromise]);
 
-      if (verseResult && surahResult) {
-        setRandomVerse({ ...verseResult.verse, surah: surahResult });
+      if (verseResult && surahPromiseResult) {
+        setRandomVerse({ ...verseResult.verse, surah: surahPromiseResult });
       }
     } catch (error) {
       console.error("Error fetching random verse:", error);
@@ -39,10 +47,11 @@ export function RandomVerse() {
       setLoading(false);
     }
   };
-
+  
   useEffect(() => {
     fetchRandomVerse();
   }, [language]);
+
 
   const translation = randomVerse?.translations?.find(tr => tr.resource_id !== TAFSIR_RESOURCE_ID);
 
@@ -59,7 +68,7 @@ export function RandomVerse() {
       </div>
       
       {loading ? (
-        <div className="h-32"><VerseSkeleton /></div>
+        <VerseSkeleton />
       ) : randomVerse ? (
         <div>
           <p className="font-arabic text-2xl text-center font-bold text-gray-900 dark:text-gray-100 dark:text-shadow-glow-sm leading-loose mb-3" style={{ textShadow: '0 0 10px rgba(102, 252, 241, 0.3)' }}>
