@@ -36,7 +36,11 @@ import { SeerahPage } from './pages/SeerahPage';
 import { SeerahChapterPage } from './pages/SeerahChapterPage';
 import { DuaLibraryPage } from './pages/DuaLibraryPage';
 import { DuaCategoryPage } from './pages/DuaCategoryPage';
-import { IslamicCalendarPage } from './pages/IslamicCalendarPage';
+import { WorshipGuidePage } from './pages/WorshipGuidePage';
+import { WorshipTopicPage } from './pages/WorshipTopicPage';
+import { GlossaryPage } from './pages/GlossaryPage';
+import { CompanionStoriesPage } from './pages/CompanionStoriesPage';
+import { CompanionStoryPage } from './pages/CompanionStoryPage';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -73,7 +77,11 @@ function AnimatedRoutes() {
         <Route path="/seerah/:chapterId" element={<SeerahChapterPage />} />
         <Route path="/dua-library" element={<DuaLibraryPage />} />
         <Route path="/dua-library/:categoryId" element={<DuaCategoryPage />} />
-        <Route path="/islamic-calendar" element={<IslamicCalendarPage />} />
+        <Route path="/worship-guide" element={<WorshipGuidePage />} />
+        <Route path="/worship-guide/:topicId" element={<WorshipTopicPage />} />
+        <Route path="/glossary" element={<GlossaryPage />} />
+        <Route path="/companion-stories" element={<CompanionStoriesPage />} />
+        <Route path="/companion-stories/:storyId" element={<CompanionStoryPage />} />
       </Routes>
     </AnimatePresence>
   );

@@ -180,5 +180,65 @@ export const nawawiHadiths: Hadith[] = [
     explanation_ar: "يربط هذا الحديث بين الإيمان بالله واليوم الآخر وبين السلوكيات الاجتماعية القويمة، كحفظ اللسان، وإكرام الجار، وإكرام الضيف، مما يدل على أن الإيمان ليس مجرد اعتقاد قلبي بل هو عمل وسلوك.",
     explanation_en: "This hadith links belief in Allah and the Last Day with upright social behaviors, such as guarding the tongue, honoring one's neighbor, and honoring one's guest. This indicates that faith is not merely a belief of the heart but is also action and behavior.",
     explanation_fr: "Ce hadith lie la croyance en Allah et au Jour Dernier à des comportements sociaux droits, tels que la maîtrise de sa langue, l'honneur de son voisin et l'honneur de son invité. Cela indique que la foi n'est pas seulement une croyance du cœur mais aussi une action et un comportement."
+  },
+  {
+    id: 16,
+    title_ar: "لا تغضب",
+    title_en: "Do not get angry",
+    title_fr: "Ne te mets pas en colère",
+    hadith_ar: "أَنَّ رَجُلًا قَالَ لِلنَّبِيِّ صلى الله عليه وسلم: أَوْصِنِي. قَالَ: 'لَا تَغْضَبْ'. فَرَدَّدَ مِرَارًا، قَالَ: 'لَا تَغْضَبْ'.",
+    hadith_en: "A man said to the Prophet (ﷺ): 'Advise me.' He said: 'Do not get angry.' The man repeated [his request] several times, and he said: 'Do not get angry.'",
+    hadith_fr: "Un homme dit au Prophète (ﷺ) : 'Conseille-moi.' Il dit : 'Ne te mets pas en colère.' L'homme répéta [sa demande] plusieurs fois, et il dit : 'Ne te mets pas en colère.'",
+    explanation_ar: "وصية جامعة ونافعة، فالغضب مفتاح لكثير من الشرور، والتحكم فيه يغلق أبواب الفتن والعداوات ويحفظ على الإنسان دينه وعقله وعلاقاته.",
+    explanation_en: "A comprehensive and beneficial piece of advice. Anger is the key to many evils, and controlling it closes the doors to trials and enmity, and preserves a person's religion, intellect, and relationships.",
+    explanation_fr: "Un conseil complet et bénéfique. La colère est la clé de nombreux maux, et la maîtriser ferme les portes des épreuves et de l'inimitié, et préserve la religion, l'intellect et les relations d'une personne."
+  },
+  {
+    id: 17,
+    title_ar: "الإحسان في كل شيء",
+    title_en: "Excellence in all things",
+    title_fr: "L'excellence en toute chose",
+    hadith_ar: "إِنَّ اللَّهَ كَتَبَ الْإِحْسَانَ عَلَى كُلِّ شَيْءٍ...",
+    hadith_en: "Verily, Allah has prescribed excellence in all things...",
+    hadith_fr: "Certes, Allah a prescrit l'excellence en toute chose...",
+    explanation_ar: "يدعو هذا الحديث إلى إتقان العمل وإحسانه في كل جوانب الحياة، سواء في العبادات أو المعاملات، وحتى في التعامل مع الحيوان.",
+    explanation_en: "This hadith calls for perfecting and excelling in one's work in all aspects of life, whether in acts of worship, dealings with others, or even in the treatment of animals.",
+    explanation_fr: "Ce hadith appelle à la perfection et à l'excellence dans son travail dans tous les aspects de la vie, que ce soit dans les actes d'adoration, les relations avec les autres, ou même dans le traitement des animaux."
+  },
+  {
+    id: 18,
+    title_ar: "اتق الله حيثما كنت",
+    title_en: "Fear Allah wherever you are",
+    title_fr: "Crains Allah où que tu sois",
+    hadith_ar: "اتَّقِ اللَّهَ حَيْثُمَا كُنْتَ، وَأَتْبِعِ السَّيِّئَةَ الْحَسَنَةَ تَمْحُهَا، وَخَالِقِ النَّاسَ بِخُلُقٍ حَسَنٍ.",
+    hadith_en: "Fear Allah wherever you are, and follow up a bad deed with a good one to wipe it out, and treat people with good character.",
+    hadith_fr: "Crains Allah où que tu sois, fais suivre une mauvaise action par une bonne qui l'effacera, et comporte-toi avec les gens avec un bon caractère.",
+    explanation_ar: "وصية جامعة لحقوق الله وحقوق العباد. فتقوى الله تكون في السر والعلن، والتوبة تمحو الذنوب، وحسن الخلق أساس التعامل مع الناس.",
+    explanation_en: "A comprehensive advice covering the rights of Allah and the rights of people. Fearing Allah should be in secret and in public, repentance erases sins, and good character is the foundation of dealing with people.",
+    explanation_fr: "Un conseil complet qui couvre les droits d'Allah et les droits des gens. Craindre Allah doit se faire en secret et en public, le repentir efface les péchés, et le bon caractère est le fondement des relations avec les gens."
+  },
+  {
+    id: 19,
+    title_ar: "احفظ الله يحفظك",
+    title_en: "Be mindful of Allah, and He will protect you",
+    title_fr: "Sois attentif à Allah, et Il te protégera",
+    hadith_ar: "يَا غُلَامُ، إِنِّي أُعَلِّمُكَ كَلِمَاتٍ: احْفَظِ اللَّهَ يَحْفَظْكَ، احْفَظِ اللَّهَ تَجِدْهُ تُجَاهَكَ...",
+    hadith_en: "O young man, I shall teach you some words [of advice]: Be mindful of Allah, and Allah will protect you. Be mindful of Allah, and you will find Him in front of you...",
+    hadith_fr: "Ô jeune homme, je vais t'enseigner quelques paroles : Sois attentif à Allah, et Allah te protégera. Sois attentif à Allah, et tu Le trouveras devant toi...",
+    explanation_ar: "وصية عظيمة من النبي لابن عباس، تعلم الأمة التوكل على الله وحده، وأن النفع والضر بيده، وأن حفظ حدود الله سبب لحفظ الله للعبد في دينه ودنياه.",
+    explanation_en: "A great advice from the Prophet to Ibn Abbas, teaching the nation to rely on Allah alone, that benefit and harm are in His hands, and that observing the limits of Allah is a reason for Allah's protection of His servant in his religion and worldly life.",
+    explanation_fr: "Un grand conseil du Prophète à Ibn Abbas, enseignant à la nation de ne compter que sur Allah, que le bien et le mal sont entre Ses mains, et que le respect des limites d'Allah est une raison pour la protection d'Allah envers Son serviteur dans sa religion et sa vie mondaine."
+  },
+  {
+    id: 20,
+    title_ar: "إذا لم تستح فاصنع ما شئت",
+    title_en: "If you feel no shame, then do as you wish",
+    title_fr: "Si tu n'as pas de pudeur, alors fais ce que tu veux",
+    hadith_ar: "إِنَّ مِمَّا أَدْرَكَ النَّاسُ مِنْ كَلَامِ النُّبُوَّةِ الْأُولَى: إِذَا لَمْ تَسْتَحِ فَاصْنَعْ مَا شِئْتَ.",
+    hadith_en: "Verily, from what was grasped by the people from the words of the first prophethood is: If you feel no shame, then do as you wish.",
+    hadith_fr: "Parmi les paroles de la première prophétie que les gens ont retenues, il y a : Si tu n'as pas de pudeur, alors fais ce que tu veux.",
+    explanation_ar: "الحياء خلق عظيم وهو شعبة من الإيمان، وهو الذي يمنع الإنسان من فعل القبائح. والحديث يحمل معنى التهديد، أي إذا نزع منك الحياء فافعل ما شئت فإن الله سيجازيك، أو معنى أن ما لا يستحى من فعله فافعله.",
+    explanation_en: "Modesty is a great characteristic and a branch of faith. It prevents a person from committing indecent acts. The hadith carries a meaning of threat, i.e., if modesty is removed from you, then do as you wish, for Allah will recompense you. Or it means that whatever is not shameful to do, then do it.",
+    explanation_fr: "La pudeur est une grande caractéristique et une branche de la foi. Elle empêche une personne de commettre des actes indécents. Le hadith a un sens de menace, c'est-à-dire que si la pudeur t'est enlevée, fais ce que tu veux, car Allah te récompensera. Ou cela signifie que tout ce qui n'est pas honteux à faire, alors fais-le."
   }
 ];

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { ChevronLeft, LucideIcon } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
-interface MoreLinkCardProps {
+interface WorshipGuideCardProps {
   to: string;
   title: string;
   subtitle: string;
@@ -13,7 +13,7 @@ interface MoreLinkCardProps {
   index: number;
 }
 
-export function MoreLinkCard({ to, title, subtitle, icon: Icon, colorClass, index }: MoreLinkCardProps) {
+export function WorshipGuideCard({ to, title, subtitle, icon: Icon, colorClass, index }: WorshipGuideCardProps) {
   const { dir } = useLanguage();
   const ChevronIcon = dir === 'rtl' ? ChevronLeft : ChevronLeft;
 
@@ -22,8 +22,6 @@ export function MoreLinkCard({ to, title, subtitle, icon: Icon, colorClass, inde
       initial={{ opacity: 0, x: dir === 'rtl' ? -20 : 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.05 }}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
     >
       <Link
         to={to}

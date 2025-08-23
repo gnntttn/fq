@@ -5,6 +5,7 @@ import { quranApi } from '../services/quranApi';
 import { Surah } from '../types/quran';
 import { SurahCard } from '../components/quran/SurahCard';
 import { useLanguage } from '../context/LanguageContext';
+import { SkeletonCard } from '../components/common/Skeleton';
 
 export function SurahsPage() {
   const [surahs, setSurahs] = useState<Surah[]>([]);
@@ -52,14 +53,6 @@ export function SurahsPage() {
     setFilteredSurahs(filtered);
   };
 
-  if (loading) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
@@ -85,13 +78,19 @@ export function SurahsPage() {
           </div>
         </motion.div>
 
-        <div className="space-y-3">
-          {filteredSurahs.map((surah, index) => (
-            <SurahCard key={surah.id} surah={surah} index={index} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="space-y-3">
+             {Array.from({ length: 10 }).map((_, i) => <SkeletonCard key={i} index={i} />)}
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {filteredSurahs.map((surah, index) => (
+              <SurahCard key={surah.id} surah={surah} index={index} />
+            ))}
+          </div>
+        )}
 
-        {filteredSurahs.length === 0 && (
+        {!loading && filteredSurahs.length === 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

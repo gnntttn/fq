@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { BookmarkX, Loader } from 'lucide-react';
+import { BookmarkX } from 'lucide-react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { quranApi } from '../services/quranApi';
 import { Verse, Surah } from '../types/quran';
 import { VerseCard } from '../components/quran/VerseCard';
 import { useLanguage } from '../context/LanguageContext';
 import { TAFSIR_RESOURCE_ID, translationMap } from '../lib/i18n';
+import { VerseSkeleton } from '../components/common/Skeleton';
 
 type BookmarkedVerse = Verse & { surah: Surah };
 
@@ -49,17 +50,6 @@ export function BookmarksPage() {
     }
   }, [bookmarks, language]);
 
-  if (loading) {
-    return (
-      <div className="h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Loader className="animate-spin text-accent-light mx-auto" size={48} />
-          <p className="mt-4 text-gray-700 dark:text-gray-300">{t('loading_bookmarks')}</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
@@ -76,7 +66,11 @@ export function BookmarksPage() {
           </p>
         </motion.div>
 
-        {bookmarkedVerses.length > 0 ? (
+        {loading ? (
+          <div className="space-y-4">
+            {Array.from({ length: 3 }).map((_, i) => <VerseSkeleton key={i} index={i} />)}
+          </div>
+        ) : bookmarkedVerses.length > 0 ? (
           <div className="space-y-6">
             {bookmarkedVerses.map((item, index) => (
               <VerseCard
@@ -85,6 +79,7 @@ export function BookmarksPage() {
                 surah={item.surah}
                 index={index}
                 showTranslation={language !== 'ar'}
+                arabicFontSize={28}
               />
             ))}
           </div>
@@ -92,7 +87,7 @@ export function BookmarksPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="text-center py-16 bg-gray-100 dark:bg-space-200/30 dark:backdrop-blur-sm border border-gray-200 dark:border-space-100/50 rounded-xl"
+            className="text-center py-16 bg-gray-100/50 dark:bg-space-200/30 dark:backdrop-blur-sm border border-dashed border-gray-300 dark:border-space-100/50 rounded-2xl"
           >
             <BookmarkX className="text-gray-400 dark:text-gray-500 mx-auto" size={64} />
             <h2 className="mt-6 text-2xl font-semibold text-gray-800 dark:text-gray-200">

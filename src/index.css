@@ -10,7 +10,23 @@
   
   html.dark body {
      background-image: 
-      radial-gradient(ellipse 80% 80% at 50% -20%,rgba(49, 130, 206, 0.3), rgba(255,255,255,0));
+      radial-gradient(at 27% 37%, hsla(215, 98%, 61%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 97% 21%, hsla(177, 98%, 61%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 52% 99%, hsla(255, 96%, 62%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 10% 29%, hsla(215, 98%, 61%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 97% 96%, hsla(177, 98%, 61%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 33% 50%, hsla(255, 96%, 62%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 79% 53%, hsla(215, 98%, 61%, 0.1) 0px, transparent 50%);
+     animation: aurora 20s infinite linear;
+  }
+}
+
+@keyframes aurora {
+  from {
+    background-position: 0% 50%, 0% 50%, 0% 50%, 0% 50%, 0% 50%, 0% 50%, 0% 50%;
+  }
+  to {
+    background-position: 350% 50%, 350% 50%, 350% 50%, 350% 50%, 350% 50%, 350% 50%, 350% 50%;
   }
 }
 
@@ -26,11 +42,11 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-400 dark:bg-gray-600 rounded-md;
+  @apply bg-gray-400/50 dark:bg-gray-600/50 rounded-md;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-500 dark:bg-gray-500;
+  @apply bg-gray-500/70 dark:bg-gray-500/70;
 }
 
 /* Arabic font optimization */

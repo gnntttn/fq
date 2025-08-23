@@ -57,7 +57,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   };
 
   const highlightText = (text: string, highlights: string[]) => {
-    if (!highlights || highlights.length === 0) return text;
+    if (!highlights || !Array.isArray(highlights) || highlights.length === 0) {
+      return text;
+    }
     
     let highlightedText = text;
     highlights.forEach(highlight => {

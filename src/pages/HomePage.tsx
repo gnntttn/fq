@@ -6,7 +6,8 @@ import { useLanguage } from '../context/LanguageContext';
 import { TasbeehCarousel } from '../components/home/TasbeehCarousel';
 import { Greeting } from '../components/home/Greeting';
 import { themedAyatCollections } from '../data/themedAyat';
-import { VerseOfTheDay } from '../components/home/VerseOfTheDay';
+import { RandomVerse } from '../components/home/RandomVerse';
+import { QuranicInsights } from '../components/home/QuranicInsights';
 
 export function HomePage() {
   const { t } = useLanguage();
@@ -22,7 +23,9 @@ export function HomePage() {
       <div className="container mx-auto px-4 py-8 space-y-8">
         <Greeting />
         
-        <VerseOfTheDay />
+        <RandomVerse />
+        
+        <QuranicInsights />
 
         <div className="grid grid-cols-3 gap-4">
           {quickActions.map((action, index) => (

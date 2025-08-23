@@ -10,6 +10,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { SurahSettingsPanel } from '../components/quran/SurahSettingsPanel';
 import { useLanguage } from '../context/LanguageContext';
 import { TAFSIR_RESOURCE_ID, translationMap } from '../lib/i18n';
+import { VerseSkeleton } from '../components/common/Skeleton';
 
 const AUDIO_BASE_URL = 'https://verses.quran.com/';
 
@@ -120,10 +121,12 @@ export function SurahPage() {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-light mx-auto"></div>
-          <p className="mt-4 text-gray-700 dark:text-gray-300">{t('loading_surah')}</p>
+      <div className="container mx-auto px-4 py-8">
+        <div className="bg-white/30 dark:bg-space-200/20 p-4 rounded-xl animate-pulse mb-6">
+          <div className="h-10 w-3/4 mx-auto bg-gray-300 dark:bg-space-100/50 rounded-md"></div>
+        </div>
+        <div className="space-y-4">
+          {Array.from({ length: 5 }).map((_, i) => <VerseSkeleton key={i} index={i} />)}
         </div>
       </div>
     );

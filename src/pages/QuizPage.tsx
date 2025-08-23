@@ -1,12 +1,15 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BrainCircuit, Play, Check, X, Repeat, Award } from 'lucide-react';
+import { BrainCircuit, Play, Check, X, Repeat, Award, Loader } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import { quizQuestions } from '../data/quiz';
-import { QuizQuestion } from '../types/quiz';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { generateQuizQuestions, GeneratedQuizQuestion } from '../lib/quizGenerator';
+import { quranApi } from '../services/quranApi';
+import { Surah } from '../types/quran';
+import { asmaulHusnaList } from '../data/asmaulhusna';
+import { prophetStories } from '../data/prophetStories';
 
-type GameState = 'start' | 'playing' | 'result';
+type GameState = 'start' | 'loading' | 'playing' | 'result';
 
 const shuffleArray = <T,>(array: T[]): T[] => {
   return [...array].sort(() => Math.random() - 0.5);
@@ -15,20 +18,35 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 export function QuizPage() {
   const { t } = useLanguage();
   const [gameState, setGameState] = useState<GameState>('start');
+  const [questions, setQuestions] = useState<GeneratedQuizQuestion[]>([]);
   const [score, setScore] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  const [highScore, setHighScore] = useLocalStorage('quiz-highscore', 0);
+  const [highScore, setHighScore] = useLocalStorage('quiz-highscore-dynamic', 0);
 
-  const questions = useMemo(() => shuffleArray(quizQuestions).slice(0, 5), []);
-  const currentQuestion = questions[currentQuestionIndex];
+  const startNewQuiz = async () => {
+    setGameState('loading');
+    const surahs = await quranApi.getSurahs();
+    const generatedQuestions = generateQuizQuestions(5, {
+      surahs,
+      asmaulHusna: asmaulHusnaList,
+      prophetStories,
+      t
+    });
+    setQuestions(generatedQuestions.map(q => ({...q, options: shuffleArray(q.options)})));
+    setScore(0);
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer(null);
+    setIsCorrect(null);
+    setGameState('playing');
+  };
 
-  const handleAnswer = (optionIndex: number) => {
+  const handleAnswer = (option: string) => {
     if (selectedAnswer !== null) return;
 
-    setSelectedAnswer(optionIndex);
-    const correct = optionIndex === currentQuestion.correctOptionIndex;
+    setSelectedAnswer(option);
+    const correct = option === questions[currentQuestionIndex].correctAnswer;
     setIsCorrect(correct);
     if (correct) {
       setScore(s => s + 1);
@@ -40,24 +58,17 @@ export function QuizPage() {
         setSelectedAnswer(null);
         setIsCorrect(null);
       } else {
-        if (score + (correct ? 1 : 0) > highScore) {
-          setHighScore(score + (correct ? 1 : 0));
+        const finalScore = score + (correct ? 1 : 0);
+        if (finalScore > highScore) {
+          setHighScore(finalScore);
         }
         setGameState('result');
       }
-    }, 1500);
-  };
-
-  const restartQuiz = () => {
-    setScore(0);
-    setCurrentQuestionIndex(0);
-    setSelectedAnswer(null);
-    setIsCorrect(null);
-    setGameState('playing');
+    }, 2000);
   };
 
   const renderContent = () => {
-    if (gameState === 'start') {
+    if (gameState === 'start' || gameState === 'loading') {
       return (
         <motion.div
           key="start"
@@ -73,10 +84,11 @@ export function QuizPage() {
             {t('quiz_subtitle')}
           </p>
           <button
-            onClick={() => setGameState('playing')}
-            className="flex items-center justify-center gap-3 mx-auto px-8 py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary-dark transition-all duration-300 shadow-lg dark:shadow-glow-md text-lg"
+            onClick={startNewQuiz}
+            disabled={gameState === 'loading'}
+            className="flex items-center justify-center gap-3 mx-auto px-8 py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary-dark transition-all duration-300 shadow-lg dark:shadow-glow-md text-lg disabled:bg-gray-400"
           >
-            <Play /> {t('quiz_start')}
+            {gameState === 'loading' ? <Loader className="animate-spin" /> : <Play />} {t('quiz_start')}
           </button>
         </motion.div>
       );
@@ -95,7 +107,7 @@ export function QuizPage() {
           <p className="text-5xl font-bold text-primary dark:text-primary-light my-4">{score} / {questions.length}</p>
           <p className="text-gray-600 dark:text-gray-300 mb-6">{t('quiz_highscore')}: {highScore}</p>
           <button
-            onClick={restartQuiz}
+            onClick={startNewQuiz}
             className="flex items-center justify-center gap-3 mx-auto px-8 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-dark transition-all duration-300 shadow-lg dark:shadow-glow-md"
           >
             <Repeat /> {t('quiz_play_again')}
@@ -103,6 +115,8 @@ export function QuizPage() {
         </motion.div>
       );
     }
+    
+    const currentQuestion = questions[currentQuestionIndex];
 
     return (
       <motion.div
@@ -121,13 +135,12 @@ export function QuizPage() {
         </div>
         <div className="bg-white/50 dark:bg-space-200/30 dark:backdrop-blur-sm border border-gray-200 dark:border-space-100/50 rounded-2xl p-8">
           <h3 className="text-2xl font-semibold text-center text-gray-900 dark:text-gray-100 mb-6 min-h-[6rem]">
-            {t(currentQuestion.questionKey)}
+            {currentQuestion.question}
           </h3>
           <div className="space-y-3">
-            {shuffleArray(currentQuestion.optionsKey).map((optionKey, i) => {
-              const originalIndex = currentQuestion.optionsKey.indexOf(optionKey);
-              const isSelected = selectedAnswer === originalIndex;
-              const isCorrectAnswer = originalIndex === currentQuestion.correctOptionIndex;
+            {currentQuestion.options.map((option, i) => {
+              const isSelected = selectedAnswer === option;
+              const isCorrectAnswer = option === currentQuestion.correctAnswer;
               
               let buttonClass = "w-full text-lg text-left p-4 rounded-xl border-2 transition-all duration-200 font-semibold ";
               if (selectedAnswer !== null) {
@@ -145,11 +158,11 @@ export function QuizPage() {
               return (
                 <button
                   key={i}
-                  onClick={() => handleAnswer(originalIndex)}
+                  onClick={() => handleAnswer(option)}
                   disabled={selectedAnswer !== null}
                   className={buttonClass}
                 >
-                  {t(optionKey)}
+                  {option}
                 </button>
               );
             })}
@@ -161,7 +174,7 @@ export function QuizPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className={`mt-4 p-3 rounded-lg text-center ${isCorrect ? 'bg-green-100 dark:bg-green-500/20 text-green-800 dark:text-green-300' : 'bg-red-100 dark:bg-red-500/20 text-red-800 dark:text-red-300'}`}
               >
-                <p className="font-semibold">{t(currentQuestion.explanationKey)}</p>
+                <p className="font-semibold">{currentQuestion.explanation}</p>
               </motion.div>
             )}
           </AnimatePresence>

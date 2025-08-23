@@ -21,4 +21,19 @@ export const seerahChapters: SeerahChapter[] = [
     title_key: 'seerah_hijrah_title',
     content_key: 'seerah_hijrah_content',
   },
+  {
+    id: 'treaty-hudaybiyyah',
+    title_key: 'seerah_hudaybiyyah_title',
+    content_key: 'seerah_hudaybiyyah_content',
+  },
+  {
+    id: 'conquest-makkah',
+    title_key: 'seerah_conquest_makkah_title',
+    content_key: 'seerah_conquest_makkah_content',
+  },
+  {
+    id: 'farewell-pilgrimage',
+    title_key: 'seerah_farewell_pilgrimage_title',
+    content_key: 'seerah_farewell_pilgrimage_content',
+  },
 ];
