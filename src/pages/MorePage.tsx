@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { AppWindow, Bookmark, BookCheck, BrainCircuit, BookMarked, Users, Sparkles, Target, BookUser, ScrollText, Shield, SunMoon, BookLock, AudioLines, Telescope, Library, BookOpen as SeerahIcon, PersonStanding, BookText as GlossaryIcon, Users2, LayoutGrid, BookOpenText } from 'lucide-react';
+import { AppWindow, Bookmark, BookCheck, BrainCircuit, BookMarked, Users, Sparkles, Target, BookUser, ScrollText, Shield, SunMoon, BookLock, Telescope, Library, BookOpen as SeerahIcon, PersonStanding, BookText as GlossaryIcon, Users2, LayoutGrid, AudioLines } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { MoreLinkCard } from '../components/more/MoreLinkCard';
 
@@ -8,7 +8,6 @@ export function MorePage() {
   const { t } = useLanguage();
 
   const moreLinks = [
-    { to: '/tafsir', title: t('tafsir_nav_title'), subtitle: t('tafsir_page_subtitle'), icon: BookOpenText, color: 'bg-teal-500' },
     { to: '/seerah', title: t('seerah_title'), subtitle: t('seerah_subtitle'), icon: SeerahIcon, color: 'bg-stone-500' },
     { to: '/companion-stories', title: t('companion_stories_title'), subtitle: t('companion_stories_subtitle'), icon: Users2, color: 'bg-orange-500' },
     { to: '/prophet-stories', title: t('prophet_stories_title'), subtitle: t('prophet_stories_subtitle'), icon: BookUser, color: 'bg-cyan-500' },

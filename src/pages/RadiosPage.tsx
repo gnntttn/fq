@@ -1,40 +1,27 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Radio as RadioIcon } from 'lucide-react';
+import { Radio as RadioIcon, Loader } from 'lucide-react';
+import axios from 'axios';
 import { Radio } from '../types/radio';
 import { RadioCard } from '../components/radios/RadioCard';
+import { AudioPlayer } from '../components/audio/AudioPlayer';
 import { useLanguage } from '../context/LanguageContext';
-import { Skeleton } from '../components/common/Skeleton';
 
-const AudioPlayer = lazy(() => import('../components/audio/AudioPlayer').then(module => ({ default: module.AudioPlayer })));
-
-const RadioCardSkeleton = () => (
-    <div className="bg-white/30 dark:bg-space-200/20 border border-gray-200 dark:border-space-100/50 rounded-xl p-4">
-      <div className="flex items-center gap-4">
-        <Skeleton className="w-12 h-12 rounded-lg" />
-        <Skeleton className="h-5 w-48 rounded" />
-      </div>
-    </div>
-  );
+const RADIOS_API_URL = 'https://mp3quran.net/api/v3/radios';
 
 export function RadiosPage() {
   const { t } = useLanguage();
   const [radios, setRadios] = useState<Radio[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [currentRadio, setCurrentRadio] = useState<Radio | null>(null);
 
   useEffect(() => {
     const fetchRadios = async () => {
-      setLoading(true);
-      setError(null);
       try {
-        const response = await axios.get('https://mp3quran.net/api/v3/radios');
+        const response = await axios.get(RADIOS_API_URL);
         setRadios(response.data.radios);
-      } catch (err) {
-        setError('Failed to load radio stations.');
-        console.error(err);
+      } catch (error) {
+        console.error('Error fetching radios:', error);
       } finally {
         setLoading(false);
       }
@@ -42,7 +29,7 @@ export function RadiosPage() {
     fetchRadios();
   }, []);
 
-  const handleRadioSelect = (radio: Radio) => {
+  const handlePlay = (radio: Radio) => {
     if (currentRadio?.id === radio.id) {
       setCurrentRadio(null);
     } else {
@@ -68,11 +55,9 @@ export function RadiosPage() {
         </motion.div>
 
         {loading ? (
-          <div className="space-y-4 max-w-3xl mx-auto">
-            {Array.from({ length: 8 }).map((_, i) => <RadioCardSkeleton key={i} />)}
+          <div className="flex justify-center items-center py-16">
+            <Loader className="animate-spin text-accent-light" size={48} />
           </div>
-        ) : error ? (
-          <div className="text-center text-red-500">{error}</div>
         ) : (
           <div className="space-y-4 max-w-3xl mx-auto">
             {radios.map((radio, index) => (
@@ -80,23 +65,20 @@ export function RadiosPage() {
                 key={radio.id}
                 radio={radio}
                 isPlaying={currentRadio?.id === radio.id}
-                onClick={() => handleRadioSelect(radio)}
+                onPlay={() => handlePlay(radio)}
                 index={index}
               />
             ))}
           </div>
         )}
       </div>
-      
-      <Suspense>
-        {currentRadio && (
-          <AudioPlayer
-            src={currentRadio.url}
-            title={`${t('playing_now')}: ${currentRadio.name}`}
-            autoPlay
-          />
-        )}
-      </Suspense>
+      {currentRadio && (
+        <AudioPlayer
+          src={currentRadio.url}
+          title={currentRadio.name}
+          autoPlay
+        />
+      )}
     </div>
   );
 }
