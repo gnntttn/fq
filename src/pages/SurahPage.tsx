@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Settings } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { quranApi } from '../services/quranApi';
 import { Surah, Verse, Reciter } from '../types/quran';
 import { VerseCard } from '../components/quran/VerseCard';
@@ -11,21 +11,27 @@ import { SurahSettingsPanel } from '../components/quran/SurahSettingsPanel';
 import { useLanguage } from '../context/LanguageContext';
 import { TAFSIR_RESOURCE_ID, translationMap } from '../lib/i18n';
 import { Skeleton } from '../components/common/Skeleton';
+import { SurahPageHeader } from '../components/quran/SurahPageHeader';
 
 const AUDIO_BASE_URL = 'https://verses.quran.com/';
 
 const VerseCardSkeleton = () => (
-  <div className="bg-white/30 dark:bg-space-200/20 border border-gray-200 dark:border-space-100/50 rounded-xl p-4">
-    <div className="flex items-start justify-between mb-4">
-      <Skeleton className="w-8 h-8 rounded-lg shrink-0" />
+  <div className="bg-white/30 dark:bg-space-200/20 border border-gray-200 dark:border-space-100/50 rounded-xl p-4 md:p-6">
+    <div className="flex items-start justify-between gap-4 mb-4">
       <div className="flex-1 px-4 text-right">
         <Skeleton className="h-8 w-full mb-2 rounded-md" />
         <Skeleton className="h-8 w-3/4 ml-auto rounded-md" />
       </div>
+      <Skeleton className="w-10 h-10 rounded-lg shrink-0" />
     </div>
-    <Skeleton className="h-4 w-full rounded-md" />
+    <div className="flex items-center justify-start gap-2 border-t border-gray-200/50 dark:border-space-100/30 pt-3">
+        <Skeleton className="h-8 w-8 rounded-full" />
+        <Skeleton className="h-8 w-8 rounded-full" />
+        <Skeleton className="h-8 w-8 rounded-full" />
+    </div>
   </div>
 );
+
 
 export function SurahPage() {
   const { id } = useParams<{ id: string }>();
@@ -135,6 +141,7 @@ export function SurahPage() {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8 space-y-4">
+        <Skeleton className="h-24 rounded-xl mb-6" />
         {Array.from({ length: 5 }).map((_, i) => <VerseCardSkeleton key={i} />)}
       </div>
     );
@@ -148,41 +155,10 @@ export function SurahPage() {
     );
   }
 
-  const ArrowIcon = dir === 'rtl' ? ArrowRight : ArrowLeft;
-
   return (
     <div className="min-h-screen pb-32">
       <div className="container mx-auto px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white/80 dark:bg-space-200/50 backdrop-blur-lg border border-gray-200 dark:border-space-100/50 rounded-xl shadow-lg p-4 mb-6 sticky top-20 z-30"
-        >
-          <div className="flex items-center justify-between">
-            <Link
-              to="/surahs"
-              className="p-2 text-gray-500 dark:text-gray-400 hover:text-accent-light hover:bg-gray-200 dark:hover:bg-space-100/50 rounded-full transition-colors"
-            >
-              <ArrowIcon size={20} />
-            </Link>
-            
-            <div className="text-center">
-              <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100 font-arabic">
-                سورة {surah.nameArabic}
-              </h1>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                {surah.versesCount} {t('verse')}
-              </p>
-            </div>
-            
-            <button
-              onClick={() => setIsSettingsOpen(true)}
-              className="p-2 text-gray-500 dark:text-gray-400 hover:text-accent-light hover:bg-gray-200 dark:hover:bg-space-100/50 rounded-full transition-colors"
-            >
-              <Settings size={20} />
-            </button>
-          </div>
-        </motion.div>
+        <SurahPageHeader surah={surah} onSettingsClick={() => setIsSettingsOpen(true)} />
 
         {surah.id !== 1 && surah.id !== 9 && (
           <motion.div
