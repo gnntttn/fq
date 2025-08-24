@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Search, Globe, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
@@ -21,26 +20,13 @@ export function Header({ onSearchToggle }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 bg-gray-50/80 dark:bg-space-300/80 backdrop-blur-lg z-40 border-b border-gray-200 dark:border-space-200/50">
+    <header className="bg-gray-100/80 dark:bg-space-200/80 backdrop-blur-lg z-30 border-b border-gray-200 dark:border-space-100/50 flex-shrink-0">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-md dark:shadow-glow-sm">
-              <span className="text-white font-bold text-lg font-arabic">
-                {language === 'ar' ? 'آ' : 'A'}
-              </span>
-            </div>
-            <h1 className={`text-xl font-bold text-gray-900 dark:text-gray-100 ${language === 'ar' ? 'font-arabic' : 'font-sans'}`}>
-              {t('main_title')}
-            </h1>
-          </Link>
-
-          {/* Action Buttons */}
+        <div className="flex items-center justify-end h-16">
           <div className="flex items-center gap-1">
              <button
                 onClick={toggleTheme}
-                className="p-2 text-gray-500 dark:text-gray-400 hover:text-accent-light hover:bg-gray-200 dark:hover:bg-space-200/50 rounded-full transition-all"
+                className="p-2 text-gray-500 dark:text-gray-400 hover:text-accent-light hover:bg-gray-200 dark:hover:bg-space-100/50 rounded-full transition-all"
                 title="Toggle Theme"
               >
                 {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
@@ -48,7 +34,7 @@ export function Header({ onSearchToggle }: HeaderProps) {
             <div className="relative">
               <button
                 onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-                className="p-2 text-gray-500 dark:text-gray-400 hover:text-accent-light hover:bg-gray-200 dark:hover:bg-space-200/50 rounded-full transition-all"
+                className="p-2 text-gray-500 dark:text-gray-400 hover:text-accent-light hover:bg-gray-200 dark:hover:bg-space-100/50 rounded-full transition-all"
                 title="Change Language"
               >
                 <Globe size={20} />
@@ -71,7 +57,7 @@ export function Header({ onSearchToggle }: HeaderProps) {
             
             <button
               onClick={onSearchToggle}
-              className="p-2 text-gray-500 dark:text-gray-400 hover:text-accent-light hover:bg-gray-200 dark:hover:bg-space-200/50 rounded-full transition-all"
+              className="p-2 text-gray-500 dark:text-gray-400 hover:text-accent-light hover:bg-gray-200 dark:hover:bg-space-100/50 rounded-full transition-all"
               title={t('search')}
             >
               <Search size={20} />

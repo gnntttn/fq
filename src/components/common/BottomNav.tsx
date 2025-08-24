@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, BookCopy, Radio, Tv2, AppWindow } from 'lucide-react';
+import { Home, BookCopy, Radio, Tv, AppWindow } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
 export function BottomNav() {
@@ -9,13 +9,13 @@ export function BottomNav() {
   const navLinks = [
     { to: '/', text: t('home'), icon: Home },
     { to: '/surahs', text: t('surahs'), icon: BookCopy },
-    { to: '/radios', text: t('radios_nav'), icon: Radio },
-    { to: '/tv', text: t('tv_nav'), icon: Tv2 },
+    { to: '/radios', text: t('radios_page_title'), icon: Radio },
+    { to: '/tv', text: t('tv_page_title'), icon: Tv },
     { to: '/more', text: t('more'), icon: AppWindow },
   ];
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `flex flex-col items-center gap-1 p-2 rounded-lg transition-all duration-300 w-16 ${
+    `flex flex-col items-center justify-center gap-1 p-2 rounded-lg transition-all duration-300 flex-1 ${
       isActive ? 'text-accent-light' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
     }`;
 
@@ -25,9 +25,9 @@ export function BottomNav() {
         {navLinks.map(link => {
           const Icon = link.icon;
           return (
-            <NavLink key={link.to} to={link.to} className={navLinkClass}>
+            <NavLink key={link.to} to={link.to} className={navLinkClass} end={link.to === '/'}>
               <Icon size={24} />
-              <span className="text-xs font-medium">{link.text}</span>
+              <span className="text-xs font-medium text-center">{link.text}</span>
             </NavLink>
           );
         })}

@@ -7,6 +7,7 @@ import { BottomNav } from './components/common/BottomNav';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { Onboarding } from './components/onboarding/Onboarding';
 import { Loader } from 'lucide-react';
+import { Sidebar } from './components/common/Sidebar';
 
 const HomePage = lazy(() => import('./pages/HomePage').then(module => ({ default: module.HomePage })));
 const SurahsPage = lazy(() => import('./pages/SurahsPage').then(module => ({ default: module.SurahsPage })));
@@ -45,8 +46,6 @@ const CompanionStoriesPage = lazy(() => import('./pages/CompanionStoriesPage').t
 const CompanionStoryPage = lazy(() => import('./pages/CompanionStoryPage').then(module => ({ default: module.CompanionStoryPage })));
 const RadiosPage = lazy(() => import('./pages/RadiosPage').then(module => ({ default: module.RadiosPage })));
 const TvPage = lazy(() => import('./pages/TvPage').then(module => ({ default: module.TvPage })));
-const TafsirListPage = lazy(() => import('./pages/TafsirListPage').then(module => ({ default: module.TafsirListPage })));
-const TafsirSeriesPage = lazy(() => import('./pages/TafsirSeriesPage').then(module => ({ default: module.TafsirSeriesPage })));
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -90,8 +89,6 @@ function AnimatedRoutes() {
         <Route path="/companion-stories/:storyId" element={<CompanionStoryPage />} />
         <Route path="/radios" element={<RadiosPage />} />
         <Route path="/tv" element={<TvPage />} />
-        <Route path="/tafsir" element={<TafsirListPage />} />
-        <Route path="/tafsir/:seriesName" element={<TafsirSeriesPage />} />
       </Routes>
     </AnimatePresence>
   );
@@ -119,17 +116,17 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen font-sans text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-space-300">
-        <Header onSearchToggle={() => setIsSearchOpen(true)} />
-        
-        <main className="pb-24 pt-4">
-          <Suspense fallback={<FullPageLoader />}>
-            <AnimatedRoutes />
-          </Suspense>
-        </main>
-
-        <BottomNav />
-
+      <div className="flex h-screen bg-gray-50 dark:bg-space-300 font-sans text-gray-800 dark:text-gray-200">
+        <Sidebar />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <Header onSearchToggle={() => setIsSearchOpen(true)} />
+          <main className="flex-1 overflow-x-hidden overflow-y-auto pb-20 md:pb-4">
+            <Suspense fallback={<FullPageLoader />}>
+              <AnimatedRoutes />
+            </Suspense>
+          </main>
+          <BottomNav />
+        </div>
         <SearchModal 
           isOpen={isSearchOpen} 
           onClose={() => setIsSearchOpen(false)} 

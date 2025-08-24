@@ -77,7 +77,7 @@ export function VerseCard({
           </div>
         )}
 
-        <div className="flex items-center justify-end gap-1 mt-3">
+        <div className="flex items-center justify-end gap-1 mt-3 border-t border-gray-200/50 dark:border-space-100/30 pt-3">
             {tafsir && (
               <button
                 onClick={() => setShowTafsir(!showTafsir)}
