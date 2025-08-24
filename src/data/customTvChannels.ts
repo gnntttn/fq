@@ -8,8 +8,8 @@ export const customTvChannels: TvChannel[] = [
   },
   {
     id: 1001,
-    name: 'قناة المجد للقرآن الكريم',
-    url: 'https://www.elahmad.com/tv/live/channel.php?id=almajd_quran',
+    name: 'قناة مكة الفضائية',
+    url: 'https://www.elahmad.com/tv/radiant.php?id=makkahtv',
   },
   {
     id: 1002,
