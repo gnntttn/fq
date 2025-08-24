@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { Home, BookCopy, Radio, Tv, AppWindow, Bookmark, Users, LayoutGrid, Heart, Sparkles, BookCheck, BrainCircuit, BookMarked, Target, BookUser, ScrollText, Shield, SunMoon, BookLock, Telescope, Library, PersonStanding, BookText, Users2, BookOpen, AudioLines } from 'lucide-react';
+import { Home, BookCopy, Radio, Tv, AppWindow, Bookmark, Users, LayoutGrid, Heart, Sparkles, BookCheck, BrainCircuit, BookMarked, Target, BookUser, ScrollText, Shield, SunMoon, BookLock, Telescope, Library, BookOpen, PersonStanding, BookText as GlossaryIcon, Users2, AudioLines } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
 export function Sidebar() {
@@ -29,7 +29,7 @@ export function Sidebar() {
     { to: '/nawawi-hadith', title: t('nawawi_hadith_title'), icon: ScrollText },
     { to: '/ruqyah', title: t('ruqyah_title'), icon: Shield },
     { to: '/tajweed-guide', title: t('tajweed_guide_title'), icon: AudioLines },
-    { to: '/glossary', title: t('glossary_title'), icon: BookText },
+    { to: '/glossary', title: t('glossary_title'), icon: GlossaryIcon },
     { to: '/miracles', title: t('miracles_title'), icon: Telescope },
     { to: '/quiz', title: t('quiz_title'), icon: BrainCircuit },
     { to: '/sajda-verses', title: t('sajda_verses_title'), icon: BookMarked },
