@@ -3,7 +3,7 @@ import { TvChannel } from '../types/tv';
 export const customTvChannels: TvChannel[] = [
   {
     id: 1004,
-    name: 'تلاوة القرآن - فاتح سفراجيك',
+    name: 'تلاوة القرآن ',
     url: 'https://www.youtube.com/embed/lCeoYw3Y9zM?si=t8IG7uovrYJQG7xJ',
   },
   {
