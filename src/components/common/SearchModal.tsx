@@ -1,23 +1,69 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, ArrowLeft } from 'lucide-react';
+import { Search, X, Loader, LucideIcon, BookCopy, Mic2, Radio, Tv, AppWindow } from 'lucide-react';
 import { quranApi } from '../../services/quranApi';
-import { SearchResult } from '../../types/quran';
+import { SearchResult, Surah, Reciter } from '../../types/quran';
+import { Radio as RadioType } from '../../types/radio';
+import { TvChannel } from '../../types/tv';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
+import { featureLinks, FeatureLink } from '../../data/features';
+import axios from 'axios';
 
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+type UnifiedSearchResultItem =
+  | { type: 'verse'; data: SearchResult }
+  | { type: 'surah'; data: Surah }
+  | { type: 'reciter'; data: Reciter }
+  | { type: 'radio'; data: RadioType }
+  | { type: 'tv'; data: TvChannel }
+  | { type: 'feature'; data: FeatureLink };
+
+const RADIOS_API_URL = 'https://mp3quran.net/api/v3/radios';
+
 export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<SearchResult[]>([]);
+  const [results, setResults] = useState<UnifiedSearchResultItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  
+  const allSurahs = useRef<Surah[]>([]);
+  const allReciters = useRef<Reciter[]>([]);
+  const allRadios = useRef<RadioType[]>([]);
+
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const { t, dir } = useLanguage();
+  const { t, language, dir } = useLanguage();
+
+  useEffect(() => {
+    if (isOpen && !dataLoaded) {
+      const loadAllData = async () => {
+        setLoading(true);
+        try {
+          const [surahsRes, recitersRes, radiosRes] = await Promise.all([
+            quranApi.getSurahs(),
+            quranApi.getReciters(),
+            axios.get(RADIOS_API_URL)
+          ]);
+          allSurahs.current = surahsRes;
+          allReciters.current = recitersRes;
+          if (radiosRes.data && Array.isArray(radiosRes.data.radios)) {
+            allRadios.current = radiosRes.data.radios;
+          }
+          setDataLoaded(true);
+        } catch (error) {
+          console.error("Error pre-loading search data:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadAllData();
+    }
+  }, [isOpen, dataLoaded]);
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -35,39 +81,116 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     }, 300);
 
     return () => clearTimeout(searchDebounce);
-  }, [query]);
+  }, [query, dataLoaded]);
 
   const handleSearch = async () => {
-    if (!query.trim()) return;
+    if (!query.trim() || !dataLoaded) return;
     
     setLoading(true);
+    let combinedResults: UnifiedSearchResultItem[] = [];
+
+    // Client-side search
+    const lowerQuery = query.toLowerCase();
+    const arQuery = query;
+
+    const surahResults: UnifiedSearchResultItem[] = allSurahs.current
+      .filter(s => s.nameArabic.includes(arQuery) || s.nameEnglish.toLowerCase().includes(lowerQuery))
+      .map(s => ({ type: 'surah', data: s }));
+
+    const reciterResults: UnifiedSearchResultItem[] = allReciters.current
+      .filter(r => r.nameArabic.includes(arQuery) || r.name.toLowerCase().includes(lowerQuery))
+      .map(r => ({ type: 'reciter', data: r }));
+
+    const radioResults: UnifiedSearchResultItem[] = allRadios.current
+      .filter(r => r.name.toLowerCase().includes(lowerQuery))
+      .map(r => ({ type: 'radio', data: r }));
+      
+    const featureResults: UnifiedSearchResultItem[] = featureLinks
+      .filter(f => t(f.titleKey).toLowerCase().includes(lowerQuery) || t(f.subtitleKey).toLowerCase().includes(lowerQuery))
+      .map(f => ({ type: 'feature', data: f }));
+
+    combinedResults = [...surahResults, ...reciterResults, ...radioResults, ...featureResults];
+
+    // Server-side search for verses
     try {
-      const searchResults = await quranApi.searchVerses(query, { size: 10 });
-      setResults(searchResults);
+      const verseSearchResults = await quranApi.searchVerses(query, { size: 5 });
+      const verseResults: UnifiedSearchResultItem[] = verseSearchResults.map(v => ({ type: 'verse', data: v }));
+      combinedResults.unshift(...verseResults);
     } catch (error) {
-      console.error('Search error:', error);
-    } finally {
-      setLoading(false);
+      console.error('Verse search error:', error);
     }
+
+    setResults(combinedResults);
+    setLoading(false);
   };
 
-  const handleResultClick = (result: SearchResult) => {
-    navigate(`/surah/${result.surah.id}?verse=${result.verse.verseNumber}`);
+  const handleResultClick = (result: UnifiedSearchResultItem) => {
+    let path = '';
+    switch (result.type) {
+      case 'verse':
+        path = `/surah/${result.data.surah.id}?verse=${result.data.verse.verseNumber}`;
+        break;
+      case 'surah':
+        path = `/surah/${result.data.id}`;
+        break;
+      case 'reciter':
+        path = `/reciters`;
+        break;
+      case 'radio':
+        path = `/radios`;
+        break;
+      case 'feature':
+        path = result.data.to;
+        break;
+      case 'tv':
+        path = `/tv`;
+        break;
+    }
+    navigate(path);
     onClose();
   };
-
+  
   const highlightText = (text: string, highlights: string[]) => {
     if (!highlights || !Array.isArray(highlights) || highlights.length === 0) {
       return text;
     }
-    
     let highlightedText = text;
     highlights.forEach(highlight => {
       const regex = new RegExp(`(${highlight})`, 'gi');
       highlightedText = highlightedText.replace(regex, '<mark class="bg-primary/20 dark:bg-primary/30 text-accent-light rounded-sm px-1">$1</mark>');
     });
-    
     return highlightedText;
+  };
+
+  const resultIcons: { [key: string]: LucideIcon } = {
+    verse: BookCopy,
+    surah: BookCopy,
+    reciter: Mic2,
+    radio: Radio,
+    tv: Tv,
+    feature: AppWindow
+  };
+
+  const getResultTitle = (item: UnifiedSearchResultItem): string => {
+    switch (item.type) {
+      case 'verse': return `${t('surah')} ${item.data.surah.nameArabic} - ${t('verse')} ${item.data.verse.verseNumber}`;
+      case 'surah': return language === 'ar' ? item.data.nameArabic : item.data.nameEnglish;
+      case 'reciter': return language === 'ar' ? item.data.nameArabic : item.data.name;
+      case 'radio': return item.data.name;
+      case 'tv': return item.data.name;
+      case 'feature': return t(item.data.titleKey);
+    }
+  };
+
+  const getResultSubtitle = (item: UnifiedSearchResultItem): string | JSX.Element => {
+    switch (item.type) {
+      case 'verse': return <div dangerouslySetInnerHTML={{ __html: highlightText(item.data.verse.textUthmani, item.data.highlights) }} />;
+      case 'surah': return `${item.data.versesCount} ${t('verse')}`;
+      case 'reciter': return item.data.style || '';
+      case 'radio': return t('radios_page_title');
+      case 'tv': return t('tv_page_title');
+      case 'feature': return t(item.data.subtitleKey);
+    }
   };
 
   return (
@@ -88,14 +211,13 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             onClick={(e) => e.stopPropagation()}
             dir={dir}
           >
-            {/* Header */}
             <div className="flex items-center border-b border-gray-200 dark:border-space-100/50 p-4">
               <div className="flex-1 relative">
                 <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <input
                   ref={inputRef}
                   type="text"
-                  placeholder={t('search_placeholder')}
+                  placeholder={t('search_global_placeholder')}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   className="w-full pr-12 pl-4 py-3 border border-gray-300 dark:border-space-100 bg-gray-100/50 dark:bg-space-300/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-gray-800 dark:text-gray-200"
@@ -109,43 +231,36 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
               </button>
             </div>
 
-            {/* Results */}
             <div className="max-h-[60vh] overflow-y-auto">
-              {loading ? (
+              {loading && !results.length ? (
                 <div className="p-8 text-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-light mx-auto"></div>
-                  <p className="mt-2 text-gray-500 dark:text-gray-400">جاري البحث...</p>
+                  <Loader className="animate-spin text-accent-light mx-auto" size={32} />
                 </div>
               ) : results.length > 0 ? (
-                <div className="p-4 space-y-3">
-                  {results.map((result, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="p-4 border border-gray-200 dark:border-space-100/50 bg-white/30 dark:bg-space-200/30 rounded-lg hover:border-primary-light dark:hover:border-accent-dark hover:shadow-md dark:hover:shadow-glow-sm cursor-pointer transition-all"
-                      onClick={() => handleResultClick(result)}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-primary-dark dark:text-primary-light font-sans-arabic">
-                          سورة {result.surah.nameArabic} - آية {result.verse.verseNumber}
-                        </span>
-                        <ArrowLeft size={16} className="text-gray-400" />
-                      </div>
-                      <div 
-                        className="text-lg leading-relaxed text-right font-arabic text-gray-800 dark:text-gray-200"
-                        dangerouslySetInnerHTML={{ 
-                          __html: highlightText(result.verse.textUthmani, result.highlights) 
-                        }}
-                      />
-                      {result.verse.translations && result.verse.translations[0] && (
-                        <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                          {result.verse.translations[0].text}
+                <div className="p-2">
+                  {results.map((item, index) => {
+                    const Icon = resultIcons[item.type];
+                    return (
+                      <motion.div
+                        key={`${item.type}-${(item.data as any).id || index}`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className="flex items-center gap-4 p-3 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 cursor-pointer"
+                        onClick={() => handleResultClick(item)}
+                      >
+                        <div className="w-9 h-9 bg-gray-200 dark:bg-space-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Icon className="text-gray-600 dark:text-gray-300" size={18} />
                         </div>
-                      )}
-                    </motion.div>
-                  ))}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-md font-semibold text-gray-800 dark:text-gray-100 truncate">{getResultTitle(item)}</p>
+                          <div className="text-sm text-gray-500 dark:text-gray-400 truncate font-arabic">
+                            {getResultSubtitle(item)}
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               ) : query.trim().length >= 2 ? (
                 <div className="p-8 text-center text-gray-500">
@@ -153,7 +268,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 </div>
               ) : (
                 <div className="p-8 text-center text-gray-500">
-                  اكتب كلمتين على الأقل للبحث
+                  {t('search_global_placeholder')}
                 </div>
               )}
             </div>
