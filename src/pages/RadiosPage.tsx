@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Radio as RadioIcon, Loader } from 'lucide-react';
+import { Radio as RadioIcon, Loader, Search } from 'lucide-react';
 import axios from 'axios';
 import { Radio } from '../types/radio';
 import { RadioCard } from '../components/radios/RadioCard';
@@ -12,6 +12,8 @@ const RADIOS_API_URL = 'https://mp3quran.net/api/v3/radios';
 export function RadiosPage() {
   const { t } = useLanguage();
   const [radios, setRadios] = useState<Radio[]>([]);
+  const [filteredRadios, setFilteredRadios] = useState<Radio[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [currentRadio, setCurrentRadio] = useState<Radio | null>(null);
 
@@ -19,7 +21,10 @@ export function RadiosPage() {
     const fetchRadios = async () => {
       try {
         const response = await axios.get(RADIOS_API_URL);
-        setRadios(response.data.radios);
+        if (response.data && Array.isArray(response.data.radios)) {
+            setRadios(response.data.radios);
+            setFilteredRadios(response.data.radios);
+        }
       } catch (error) {
         console.error('Error fetching radios:', error);
       } finally {
@@ -28,6 +33,13 @@ export function RadiosPage() {
     };
     fetchRadios();
   }, []);
+
+  useEffect(() => {
+    const filtered = radios.filter(radio =>
+      radio.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredRadios(filtered);
+  }, [searchQuery, radios]);
 
   const handlePlay = (radio: Radio) => {
     if (currentRadio?.id === radio.id) {
@@ -54,13 +66,31 @@ export function RadiosPage() {
           </p>
         </motion.div>
 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mb-8 max-w-2xl mx-auto"
+        >
+          <div className="relative">
+            <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="text"
+              placeholder={t('search_radio_placeholder')}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pr-12 pl-4 py-3 border border-gray-300 dark:border-space-100 bg-white dark:bg-space-200/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-gray-800 dark:text-gray-200"
+            />
+          </div>
+        </motion.div>
+
         {loading ? (
           <div className="flex justify-center items-center py-16">
             <Loader className="animate-spin text-accent-light" size={48} />
           </div>
         ) : (
           <div className="space-y-4 max-w-3xl mx-auto">
-            {radios.map((radio, index) => (
+            {filteredRadios.map((radio, index) => (
               <RadioCard
                 key={radio.id}
                 radio={radio}
@@ -69,6 +99,9 @@ export function RadiosPage() {
                 index={index}
               />
             ))}
+             {filteredRadios.length === 0 && (
+              <p className="text-center text-gray-500 dark:text-gray-400 py-10">{t('no_results_found')}</p>
+            )}
           </div>
         )}
       </div>
