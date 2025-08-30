@@ -34,19 +34,25 @@ export function QuizPage() {
       prophetStories,
       t
     });
-    setQuestions(generatedQuestions.map(q => ({...q, options: shuffleArray(q.options)})));
-    setScore(0);
-    setCurrentQuestionIndex(0);
-    setSelectedAnswer(null);
-    setIsCorrect(null);
-    setGameState('playing');
+
+    if (generatedQuestions.length > 0) {
+      setQuestions(generatedQuestions.map(q => ({...q, options: shuffleArray(q.options)})));
+      setScore(0);
+      setCurrentQuestionIndex(0);
+      setSelectedAnswer(null);
+      setIsCorrect(null);
+      setGameState('playing');
+    } else {
+      console.error("Failed to generate quiz, returning to start screen.");
+      setGameState('start');
+    }
   };
 
   const handleAnswer = (option: string) => {
     if (selectedAnswer !== null) return;
 
-    setSelectedAnswer(option);
     const correct = option === questions[currentQuestionIndex].correctAnswer;
+    setSelectedAnswer(option);
     setIsCorrect(correct);
     if (correct) {
       setScore(s => s + 1);

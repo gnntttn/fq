@@ -1,72 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { motion } from 'framer-motion';
-import { BookOpenText } from 'lucide-react';
-import { TafsirAudio, TafsirSeries } from '../types/tafsir';
-import { TafsirSeriesCard } from '../components/tafsir/TafsirSeriesCard';
-import { useLanguage } from '../context/LanguageContext';
-import { Skeleton } from '../components/common/Skeleton';
+import { BookHeadphones, Loader, Search } from 'lucide-react';
+import axios from 'axios';
+import { TafsirSeries } from '../../types/tafsir';
+import { TafsirSeriesCard } from '../../components/tafsir/TafsirSeriesCard';
+import { useLanguage } from '../../context/LanguageContext';
+import { Skeleton } from '../../components/common/Skeleton';
 
-const TafsirCardSkeleton = () => (
-    <div className="bg-white/30 dark:bg-space-200/20 border border-gray-200 dark:border-space-100/50 rounded-xl p-4">
-      <div className="flex items-center gap-4">
-        <Skeleton className="w-12 h-12 rounded-lg" />
-        <div>
-          <Skeleton className="h-5 w-48 mb-2 rounded" />
-          <Skeleton className="h-4 w-24 rounded" />
-        </div>
-      </div>
-    </div>
-  );
+const TAFSIR_API_URL = 'https://mp3quran.net/api/v3/tafasir';
 
 export function TafsirListPage() {
-  const { t } = useLanguage();
-  const [series, setSeries] = useState<TafsirSeries[]>([]);
+  const { t, language } = useLanguage();
+  const [tafsirs, setTafsirs] = useState<TafsirSeries[]>([]);
+  const [filteredTafsirs, setFilteredTafsirs] = useState<TafsirSeries[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    const fetchTafasir = async () => {
-      setLoading(true);
-      setError(null);
+    const fetchTafsirs = async () => {
       try {
-        const response = await axios.get('https://mp3quran.net/api/v3/tafasir');
-        const audios: TafsirAudio[] = response.data.tafasir;
-
-        const groupedByName = audios.reduce((acc, audio) => {
-          const key = `${audio.tafsir_name}_${audio.language}`;
-          if (!acc[key]) {
-            acc[key] = {
-              name: audio.tafsir_name,
-              language: audio.language,
-              audios: [],
-            };
-          }
-          acc[key].audios.push(audio);
-          return acc;
-        }, {} as { [key: string]: TafsirSeries });
-
-        setSeries(Object.values(groupedByName));
-
+        const response = await axios.get(TAFSIR_API_URL, {
+          params: { language: language === 'ar' ? 'ar' : 'eng' },
+        });
+        if (response.data && Array.isArray(response.data.tafasir)) {
+          setTafsirs(response.data.tafasir);
+          setFilteredTafsirs(response.data.tafasir);
+        } else {
+          throw new Error("Invalid API response format");
+        }
       } catch (err) {
-        setError('Failed to load Tafsir series.');
-        console.error(err);
+        setError(t('error_fetching_data'));
+        console.error('Error fetching tafsirs:', err);
       } finally {
         setLoading(false);
       }
     };
-    fetchTafasir();
-  }, []);
+    fetchTafsirs();
+  }, [language, t]);
+
+  useEffect(() => {
+    const filtered = tafsirs.filter(tafsir =>
+      tafsir.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredTafsirs(filtered);
+  }, [searchQuery, tafsirs]);
 
   return (
-    <div className="min-h-screen pb-16">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <BookOpenText className="text-primary dark:text-primary-light mx-auto mb-4" size={48} />
+          <BookHeadphones className="text-primary dark:text-primary-light mx-auto mb-4" size={48} />
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4 font-arabic">
             {t('tafsir_page_title')}
           </h1>
@@ -75,23 +63,41 @@ export function TafsirListPage() {
           </p>
         </motion.div>
 
-        {loading ? (
-          <div className="space-y-4 max-w-3xl mx-auto">
-            {Array.from({ length: 3 }).map((_, i) => <TafsirCardSkeleton key={i} />)}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mb-8 max-w-2xl mx-auto"
+        >
+          <div className="relative">
+            <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="text"
+              placeholder={t('search_placeholder')}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pr-12 pl-4 py-3 border border-gray-300 dark:border-space-100 bg-white dark:bg-space-200/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-gray-800 dark:text-gray-200"
+            />
           </div>
-        ) : error ? (
-          <div className="text-center text-red-500">{error}</div>
-        ) : (
-          <div className="space-y-4 max-w-3xl mx-auto">
-            {series.map((item, index) => (
-              <TafsirSeriesCard
-                key={`${item.name}-${item.language}`}
-                series={item}
-                index={index}
+        </motion.div>
+        
+        <div className="space-y-4 max-w-3xl mx-auto">
+          {loading ? (
+            <>
+              {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-24 w-full rounded-xl" />)}
+            </>
+          ) : error ? (
+             <div className="text-center text-red-500 py-10">{error}</div>
+          ) : (
+            filteredTafsirs.map((tafsir, index) => (
+              <TafsirSeriesCard 
+                key={tafsir.id}
+                tafsir={tafsir} 
+                index={index} 
               />
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

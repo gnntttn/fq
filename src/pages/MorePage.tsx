@@ -9,7 +9,11 @@ export function MorePage() {
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredLinks = featureLinks.filter(link =>
+  const mainNavPaths = new Set(['/', '/quran/1', '/media', '/quiz', '/more']);
+
+  const morePageLinks = featureLinks.filter(link => !mainNavPaths.has(link.to));
+
+  const filteredLinks = morePageLinks.filter(link =>
     t(link.titleKey).toLowerCase().includes(searchQuery.toLowerCase()) ||
     t(link.subtitleKey).toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -56,7 +60,7 @@ export function MorePage() {
               to={link.to}
               title={t(link.titleKey)}
               subtitle={t(link.subtitleKey)}
-              icon={link.icon}
+              Icon={link.icon}
               colorClass={link.color}
               index={index}
             />

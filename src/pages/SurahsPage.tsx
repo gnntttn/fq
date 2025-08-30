@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
 import { quranApi } from '../services/quranApi';
 import { Surah } from '../types/quran';
-import { SurahCard } from '../components/quran/SurahCard';
 import { useLanguage } from '../context/LanguageContext';
 import { Skeleton } from '../components/common/Skeleton';
 
@@ -103,7 +103,44 @@ export function SurahsPage() {
         ) : (
           <div className="space-y-3">
             {filteredSurahs.map((surah, index) => (
-              <SurahCard key={surah.id} surah={surah} index={index} />
+              <motion.div
+                key={surah.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.02 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Link 
+                  to={`/surah/${surah.id}`} 
+                  className="block bg-white dark:bg-space-200/30 dark:backdrop-blur-sm border border-gray-200 dark:border-space-100/50 rounded-xl p-4 transition-all duration-300 hover:border-primary-light dark:hover:border-accent-dark hover:shadow-lg dark:hover:shadow-glow-sm"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4 space-x-reverse">
+                      <div className="w-10 h-10 border-2 border-primary-light dark:border-primary-dark text-primary-dark dark:text-primary-light rounded-lg flex items-center justify-center font-bold text-sm transition-all duration-300">
+                        {surah.id}
+                      </div>
+                      <div>
+                        <h3 className="text-md font-bold font-arabic text-gray-900 dark:text-gray-100">
+                          {surah.nameArabic}
+                        </h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 font-sans">
+                          {surah.nameEnglish}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="text-right">
+                      <p className="text-lg font-arabic text-gray-800 dark:text-gray-200">
+                        {surah.nameArabic}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-500">
+                        {surah.versesCount} {t('verse')}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
             ))}
           </div>
         )}

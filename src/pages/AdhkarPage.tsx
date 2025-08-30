@@ -37,7 +37,7 @@ export function AdhkarPage() {
           </p>
         </motion.div>
 
-        <div className="sticky top-20 z-30 bg-gray-50/80 dark:bg-space-300/80 backdrop-blur-lg p-2 rounded-xl mb-8 max-w-md mx-auto">
+        <div className="sticky top-0 z-30 bg-gray-50/80 dark:bg-space-300/80 backdrop-blur-lg p-2 rounded-xl mb-8 max-w-md mx-auto">
           <div className="flex gap-2">
             <button onClick={() => setActiveTab('morning')} className={tabButtonClass('morning')}>
               <Sun size={20} /> {t('morning_adhkar')}
