@@ -39,17 +39,16 @@ npm manifest:
       "preview": "vite preview"
     },
     "dependencies": {
-      "axios": "^1.9.0",
-      "framer-motion": "^12.23.12",
-      "hijri-date": "^0.2.2",
-      "lucide-react": "^0.511.0",
+      "@google/generative-ai": "^0.16.0",
+      "axios": "^1.7.2",
+      "framer-motion": "^11.3.19",
+      "lucide-react": "^0.417.0",
       "react": "^18.3.1",
       "react-dom": "^18.3.1",
       "react-player": "^2.16.0",
-      "react-router-dom": "^6.24.1"
+      "react-router-dom": "^6.25.1"
     },
     "devDependencies": {
-      "@eslint/js": "^9.27.0",
       "@types/react": "^18.3.3",
       "@types/react-dom": "^18.3.0",
       "@types/react-player": "^2.7.0",
@@ -947,7 +946,7 @@ Lockfile:
       minimatch "^3.1.2"
       strip-json-comments "^3.1.1"
   
-  "@eslint/js@9.33.0", "@eslint/js@^9.27.0":
+  "@eslint/js@9.33.0":
     version "9.33.0"
     resolved "https://registry.yarnpkg.com/@eslint/js/-/js-9.33.0.tgz#475c92fdddab59b8b8cab960e3de2564a44bf368"
     integrity sha512-5K1/mKhWaMfreBGJTwval43JJmkip0RmM+3+IuqupeSKNC/Th2Kc7ucaq5ovTSra/OOKB9c58CGSz3QMVbWt0A==
@@ -964,6 +963,11 @@ Lockfile:
     dependencies:
       "@eslint/core" "^0.15.2"
       levn "^0.4.1"
+  
+  "@google/generative-ai@^0.16.0":
+    version "0.16.1"
+    resolved "https://registry.yarnpkg.com/@google/generative-ai/-/generative-ai-0.16.1.tgz#17016634aa20e2939e5739d63a73d328088a7f7b"
+    integrity sha512-t4x4g0z/HT2BdBNfK2ua2xA/Az+SDFng4PxWjgiys/qxbh2YcrCI2rZg9/6eBkd4Iz41yjpCCDOWxsMryLJ7TA==
   
   "@humanfs/core@^0.19.1":
     version "0.19.1"
@@ -1460,7 +1464,7 @@ Lockfile:
     dependencies:
       possible-typed-array-names "^1.0.0"
   
-  axios@^1.9.0:
+  axios@^1.7.2:
     version "1.11.0"
     resolved "https://registry.yarnpkg.com/axios/-/axios-1.11.0.tgz#c2ec219e35e414c025b2095e8b8280278478fdb6"
     integrity sha512-1Lx3WLFQWm3ooKDYZD1eXmoGO9fxYQjrycfHFC8P0sCfQVXyROp0p9PFWBehewBOdCwHc+f/b8I0fMto5eSfwA==
@@ -2136,13 +2140,13 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.3.7.tgz#06ca0085157e42fda7f9e726e79fefc4068840f7"
     integrity sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==
   
-  framer-motion@^12.23.12:
-    version "12.23.12"
-    resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-12.23.12.tgz#80cf6fd7c111073a0c558e336c85ca36cca80d3d"
-    integrity sha512-6e78rdVtnBvlEVgu6eFEAgG9v3wLnYEboM8I5O5EXvfKC8gxGQB8wXJdhkMy10iVcn05jl6CNw7/HTsTCfwcWg==
+  framer-motion@^11.3.19:
+    version "11.18.2"
+    resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-11.18.2.tgz#0c6bd05677f4cfd3b3bdead4eb5ecdd5ed245718"
+    integrity sha512-5F5Och7wrvtLVElIpclDT0CBzMVg3dL22B64aZwHtsIY8RB4mXICLrkajK4G9R+ieSAGcgrLeae2SeUTg2pr6w==
     dependencies:
-      motion-dom "^12.23.12"
-      motion-utils "^12.23.6"
+      motion-dom "^11.18.1"
+      motion-utils "^11.18.1"
       tslib "^2.4.0"
   
   fs-extra@^9.0.1:
@@ -2343,11 +2347,6 @@ Lockfile:
     integrity sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==
     dependencies:
       function-bind "^1.1.2"
-  
-  hijri-date@^0.2.2:
-    version "0.2.2"
-    resolved "https://registry.yarnpkg.com/hijri-date/-/hijri-date-0.2.2.tgz#16bc0693b0f50840d0f155fcb4e84ab8e5266338"
-    integrity sha512-LiuslQTPqePwh/KguBB2KH/hzISQd7nQtfVPwdCKgfFv0GDzwjIeTQX/LkBKLI8rPeuXasr3sQMuJL35g8HEAw==
   
   idb@^7.0.1:
     version "7.1.1"
@@ -2788,10 +2787,10 @@ Lockfile:
     dependencies:
       yallist "^3.0.2"
   
-  lucide-react@^0.511.0:
-    version "0.511.0"
-    resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.511.0.tgz#1dfef3065c725ac83f5fe0a6f02d1e0b0c36e641"
-    integrity sha512-VK5a2ydJ7xm8GvBeKLS9mu1pVK6ucef9780JVUjw6bAjJL/QXnd4Y0p7SPeOUMC27YhzNCZvm5d/QX0Tp3rc0w==
+  lucide-react@^0.417.0:
+    version "0.417.0"
+    resolved "https://registry.yarnpkg.com/lucide-react/-/lucide-react-0.417.0.tgz#caa24fdbeb33d62abda2fd9e64337fcc85224777"
+    integrity sha512-F/MDUHDter8YMZ7JKQpW/5/+v38tdaoShKX3e+opYsqfCnaHwn+5zz3+lBrMDFMNtSsvxtNpchLIaMpEfsi/4w==
   
   magic-string@^0.25.0, magic-string@^0.25.7:
     version "0.25.9"
@@ -2856,17 +2855,17 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/minipass/-/minipass-7.1.2.tgz#93a9626ce5e5e66bd4db86849e7515e92340a707"
     integrity sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==
   
-  motion-dom@^12.23.12:
-    version "12.23.12"
-    resolved "https://registry.yarnpkg.com/motion-dom/-/motion-dom-12.23.12.tgz#87974046e7e61bc4932f36d35e8eab6bb6f3e434"
-    integrity sha512-RcR4fvMCTESQBD/uKQe49D5RUeDOokkGRmz4ceaJKDBgHYtZtntC/s2vLvY38gqGaytinij/yi3hMcWVcEF5Kw==
+  motion-dom@^11.18.1:
+    version "11.18.1"
+    resolved "https://registry.yarnpkg.com/motion-dom/-/motion-dom-11.18.1.tgz#e7fed7b7dc6ae1223ef1cce29ee54bec826dc3f2"
+    integrity sha512-g76KvA001z+atjfxczdRtw/RXOM3OMSdd1f4DL77qCTF/+avrRJiawSG4yDibEQ215sr9kpinSlX2pCTJ9zbhw==
     dependencies:
-      motion-utils "^12.23.6"
+      motion-utils "^11.18.1"
   
-  motion-utils@^12.23.6:
-    version "12.23.6"
-    resolved "https://registry.yarnpkg.com/motion-utils/-/motion-utils-12.23.6.tgz#fafef80b4ea85122dd0d6c599a0c63d72881f312"
-    integrity sha512-eAWoPgr4eFEOFfg2WjIsMoqJTW6Z8MTUCgn/GZ3VRpClWBdnbjryiA3ZSNLyxCTmCQx4RmYX6jX1iWHbenUPNQ==
+  motion-utils@^11.18.1:
+    version "11.18.1"
+    resolved "https://registry.yarnpkg.com/motion-utils/-/motion-utils-11.18.1.tgz#671227669833e991c55813cf337899f41327db5b"
+    integrity sha512-49Kt+HKjtbJKLtgO/LKj9Ld+6vw9BjH5d9sc40R/kVyH8GLAXgT42M2NnuPcJNuA3s9ZfZBUcwIgpmZWGEE+hA==
   
   ms@^2.1.3:
     version "2.1.3"
@@ -3154,7 +3153,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.17.0.tgz#b7e579c3657f23d04eccbe4ad2e58a8ed51e7e53"
     integrity sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==
   
-  react-router-dom@^6.24.1:
+  react-router-dom@^6.25.1:
     version "6.30.1"
     resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.30.1.tgz#da2580c272ddb61325e435478566be9563a4a237"
     integrity sha512-llKsgOkZdbPU1Eg3zK8lCn+sjD9wMRZZPuzmdWWX5SUs8OFkN5HnFVC0u5KMeMaC9aoancFI/KoLuKPqN+hxHw==
