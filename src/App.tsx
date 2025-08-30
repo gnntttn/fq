@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from 'react';
+import React, { useState, lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { Header } from './components/common/Header';
@@ -8,6 +8,10 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import { Onboarding } from './components/onboarding/Onboarding';
 import { Loader } from 'lucide-react';
 import { Sidebar } from './components/common/Sidebar';
+import { Toaster } from './components/common/Toaster';
+import { LanguageProvider } from './context/LanguageContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { initializeOneSignal } from './services/oneSignalService';
 
 const HomePage = lazy(() => import('./pages/HomePage').then(module => ({ default: module.HomePage })));
 const SurahsPage = lazy(() => import('./pages/SurahsPage').then(module => ({ default: module.SurahsPage })));
@@ -39,13 +43,11 @@ const SeerahPage = lazy(() => import('./pages/SeerahPage').then(module => ({ def
 const SeerahChapterPage = lazy(() => import('./pages/SeerahChapterPage').then(module => ({ default: module.SeerahChapterPage })));
 const DuaLibraryPage = lazy(() => import('./pages/DuaLibraryPage').then(module => ({ default: module.DuaLibraryPage })));
 const DuaCategoryPage = lazy(() => import('./pages/DuaCategoryPage').then(module => ({ default: module.DuaCategoryPage })));
-const WorshipGuidePage = lazy(() => import('./pages/WorshipGuidePage').then(module => ({ default: module.WorshipGuidePage })));
-const WorshipTopicPage = lazy(() => import('./pages/WorshipTopicPage').then(module => ({ default: module.WorshipTopicPage })));
 const GlossaryPage = lazy(() => import('./pages/GlossaryPage').then(module => ({ default: module.GlossaryPage })));
 const CompanionStoriesPage = lazy(() => import('./pages/CompanionStoriesPage').then(module => ({ default: module.CompanionStoriesPage })));
 const CompanionStoryPage = lazy(() => import('./pages/CompanionStoryPage').then(module => ({ default: module.CompanionStoryPage })));
-const RadiosPage = lazy(() => import('./pages/RadiosPage').then(module => ({ default: module.RadiosPage })));
-const TvPage = lazy(() => import('./pages/TvPage').then(module => ({ default: module.TvPage })));
+const MediaPage = lazy(() => import('./pages/MediaPage').then(module => ({ default: module.MediaPage })));
+const AssistantPage = lazy(() => import('./pages/AssistantPage').then(module => ({ default: module.AssistantPage })));
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -54,9 +56,9 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<HomePage />} />
         <Route path="/surahs" element={<SurahsPage />} />
-        <Route path="/surah/:id" element={<SurahPage />} />
+        <Route path="/surah/:surahId" element={<SurahPage />} />
         <Route path="/juzs" element={<JuzsPage />} />
-        <Route path="/juz/:id" element={<JuzPage />} />
+        <Route path="/juz/:juzId" element={<JuzPage />} />
         <Route path="/reciters" element={<RecitersPage />} />
         <Route path="/bookmarks" element={<BookmarksPage />} />
         <Route path="/topics" element={<TopicsPage />} />
@@ -82,13 +84,11 @@ function AnimatedRoutes() {
         <Route path="/seerah/:chapterId" element={<SeerahChapterPage />} />
         <Route path="/dua-library" element={<DuaLibraryPage />} />
         <Route path="/dua-library/:categoryId" element={<DuaCategoryPage />} />
-        <Route path="/worship-guide" element={<WorshipGuidePage />} />
-        <Route path="/worship-guide/:topicId" element={<WorshipTopicPage />} />
         <Route path="/glossary" element={<GlossaryPage />} />
         <Route path="/companion-stories" element={<CompanionStoriesPage />} />
         <Route path="/companion-stories/:storyId" element={<CompanionStoryPage />} />
-        <Route path="/radios" element={<RadiosPage />} />
-        <Route path="/tv" element={<TvPage />} />
+        <Route path="/media" element={<MediaPage />} />
+        <Route path="/assistant" element={<AssistantPage />} />
       </Routes>
     </AnimatePresence>
   );
@@ -102,9 +102,15 @@ function FullPageLoader() {
   );
 }
 
-function App() {
+function AppContent() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [onboardingCompleted, setOnboardingCompleted] = useLocalStorage('onboarding-completed', false);
+
+  useEffect(() => {
+    if (onboardingCompleted) {
+      initializeOneSignal();
+    }
+  }, [onboardingCompleted]);
 
   const handleOnboardingComplete = () => {
     setOnboardingCompleted(true);
@@ -116,7 +122,8 @@ function App() {
 
   return (
     <Router>
-      <div className="flex h-screen bg-gray-50 dark:bg-space-300 font-sans text-gray-800 dark:text-gray-200">
+      <Toaster />
+      <div className="flex h-screen bg-gray-100 dark:bg-space-300 font-sans text-gray-800 dark:text-gray-200">
         <Sidebar />
         <div className="flex-1 flex flex-col overflow-hidden">
           <Header onSearchToggle={() => setIsSearchOpen(true)} />
@@ -133,6 +140,16 @@ function App() {
         />
       </div>
     </Router>
+  );
+}
+
+function App() {
+  return (
+    <LanguageProvider>
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
+    </LanguageProvider>
   );
 }
 

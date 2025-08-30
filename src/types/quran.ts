@@ -6,6 +6,7 @@ export interface Surah {
   versesCount: number;
   type: 'meccan' | 'medinan';
   bismillahPre?: boolean;
+  pages: [number, number];
 }
 
 export interface Verse {
@@ -42,19 +43,17 @@ export interface Reciter {
   qiraat?: string;
 }
 
-export interface PrayerTimes {
-  fajr: string;
-  sunrise: string;
-  dhuhr: string;
-  asr: string;
-  maghrib: string;
-  isha: string;
-  date: string;
-  hijriDate?: string;
-}
-
 export interface SearchResult {
   verse: Verse;
   surah: Surah;
   highlights: string[];
+}
+
+export interface JuzInfo {
+  id: number;
+  juz_number: number;
+  verse_mapping: { [key: string]: string };
+  first_verse_id: number;
+  last_verse_id: number;
+  verses_count: number;
 }
