@@ -8,14 +8,14 @@ interface MoreLinkCardProps {
   to: string;
   title: string;
   subtitle: string;
-  icon: LucideIcon;
+  Icon: LucideIcon;
   colorClass: string;
   index: number;
 }
 
-export function MoreLinkCard({ to, title, subtitle, icon: Icon, colorClass, index }: MoreLinkCardProps) {
+export function MoreLinkCard({ to, title, subtitle, Icon, colorClass, index }: MoreLinkCardProps) {
   const { dir } = useLanguage();
-  const ChevronIcon = dir === 'rtl' ? ChevronLeft : ChevronLeft;
+  const ChevronIcon = ChevronLeft;
 
   return (
     <motion.div

@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, Loader, LucideIcon, BookCopy, Mic2, Radio, Tv, AppWindow } from 'lucide-react';
+import { Search, X, Loader, LucideIcon, BookCopy, Mic2, AppWindow, Radio, Tv } from 'lucide-react';
 import { quranApi } from '../../services/quranApi';
 import { SearchResult, Surah, Reciter } from '../../types/quran';
-import { Radio as RadioType } from '../../types/radio';
-import { TvChannel } from '../../types/tv';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import { featureLinks, FeatureLink } from '../../data/features';
+import { Radio as RadioType } from '../../types/radio';
+import { TvChannel } from '../../types/tv';
 import axios from 'axios';
 
 interface SearchModalProps {
@@ -19,11 +19,9 @@ type UnifiedSearchResultItem =
   | { type: 'verse'; data: SearchResult }
   | { type: 'surah'; data: Surah }
   | { type: 'reciter'; data: Reciter }
+  | { type: 'feature'; data: FeatureLink }
   | { type: 'radio'; data: RadioType }
-  | { type: 'tv'; data: TvChannel }
-  | { type: 'feature'; data: FeatureLink };
-
-const RADIOS_API_URL = 'https://mp3quran.net/api/v3/radios';
+  | { type: 'tv'; data: TvChannel };
 
 export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState('');
@@ -34,6 +32,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const allSurahs = useRef<Surah[]>([]);
   const allReciters = useRef<Reciter[]>([]);
   const allRadios = useRef<RadioType[]>([]);
+  const allTvChannels = useRef<TvChannel[]>([]);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -44,16 +43,16 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
       const loadAllData = async () => {
         setLoading(true);
         try {
-          const [surahsRes, recitersRes, radiosRes] = await Promise.all([
+          const [surahsRes, recitersRes, radiosRes, tvRes] = await Promise.all([
             quranApi.getSurahs(),
             quranApi.getReciters(),
-            axios.get(RADIOS_API_URL)
+            axios.get('https://mp3quran.net/api/v3/radios'),
+            axios.get('https://mp3quran.net/api/v3/live-tv'),
           ]);
           allSurahs.current = surahsRes;
           allReciters.current = recitersRes;
-          if (radiosRes.data && Array.isArray(radiosRes.data.radios)) {
-            allRadios.current = radiosRes.data.radios;
-          }
+          if (radiosRes.data && radiosRes.data.radios) allRadios.current = radiosRes.data.radios;
+          if (tvRes.data && tvRes.data['live-tv']) allTvChannels.current = tvRes.data['live-tv'];
           setDataLoaded(true);
         } catch (error) {
           console.error("Error pre-loading search data:", error);
@@ -89,7 +88,6 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     setLoading(true);
     let combinedResults: UnifiedSearchResultItem[] = [];
 
-    // Client-side search
     const lowerQuery = query.toLowerCase();
     const arQuery = query;
 
@@ -100,18 +98,21 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     const reciterResults: UnifiedSearchResultItem[] = allReciters.current
       .filter(r => r.nameArabic.includes(arQuery) || r.name.toLowerCase().includes(lowerQuery))
       .map(r => ({ type: 'reciter', data: r }));
-
-    const radioResults: UnifiedSearchResultItem[] = allRadios.current
-      .filter(r => r.name.toLowerCase().includes(lowerQuery))
-      .map(r => ({ type: 'radio', data: r }));
       
     const featureResults: UnifiedSearchResultItem[] = featureLinks
       .filter(f => t(f.titleKey).toLowerCase().includes(lowerQuery) || t(f.subtitleKey).toLowerCase().includes(lowerQuery))
       .map(f => ({ type: 'feature', data: f }));
 
-    combinedResults = [...surahResults, ...reciterResults, ...radioResults, ...featureResults];
+    const radioResults: UnifiedSearchResultItem[] = allRadios.current
+      .filter(r => r.name.toLowerCase().includes(lowerQuery) || r.name.includes(arQuery))
+      .map(r => ({ type: 'radio', data: r }));
 
-    // Server-side search for verses
+    const tvResults: UnifiedSearchResultItem[] = allTvChannels.current
+      .filter(tv => tv.name.toLowerCase().includes(lowerQuery) || tv.name.includes(arQuery))
+      .map(tv => ({ type: 'tv', data: tv }));
+
+    combinedResults = [...surahResults, ...reciterResults, ...featureResults, ...radioResults, ...tvResults];
+
     try {
       const verseSearchResults = await quranApi.searchVerses(query, { size: 5 });
       const verseResults: UnifiedSearchResultItem[] = verseSearchResults.map(v => ({ type: 'verse', data: v }));
@@ -124,29 +125,34 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     setLoading(false);
   };
 
-  const handleResultClick = (result: UnifiedSearchResultItem) => {
+  const handleResultClick = async (result: UnifiedSearchResultItem) => {
     let path = '';
     switch (result.type) {
       case 'verse':
-        path = `/surah/${result.data.surah.id}?verse=${result.data.verse.verseNumber}`;
+        const verseDetails = await quranApi.getVerseByKey(result.data.verse.verseKey);
+        if (verseDetails) {
+          path = `/quran/${verseDetails.verse.page}?highlight=${result.data.verse.verseKey}`;
+        }
         break;
       case 'surah':
-        path = `/surah/${result.data.id}`;
+        path = `/quran/${result.data.pages[0]}`;
         break;
       case 'reciter':
         path = `/reciters`;
         break;
-      case 'radio':
-        path = `/radios`;
-        break;
       case 'feature':
         path = result.data.to;
         break;
+      case 'radio':
+        path = '/media';
+        break;
       case 'tv':
-        path = `/tv`;
+        path = '/media';
         break;
     }
-    navigate(path);
+    if (path) {
+      navigate(path);
+    }
     onClose();
   };
   
@@ -166,9 +172,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     verse: BookCopy,
     surah: BookCopy,
     reciter: Mic2,
+    feature: AppWindow,
     radio: Radio,
     tv: Tv,
-    feature: AppWindow
   };
 
   const getResultTitle = (item: UnifiedSearchResultItem): string => {
@@ -176,9 +182,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
       case 'verse': return `${t('surah')} ${item.data.surah.nameArabic} - ${t('verse')} ${item.data.verse.verseNumber}`;
       case 'surah': return language === 'ar' ? item.data.nameArabic : item.data.nameEnglish;
       case 'reciter': return language === 'ar' ? item.data.nameArabic : item.data.name;
+      case 'feature': return t(item.data.titleKey);
       case 'radio': return item.data.name;
       case 'tv': return item.data.name;
-      case 'feature': return t(item.data.titleKey);
     }
   };
 
@@ -187,9 +193,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
       case 'verse': return <div dangerouslySetInnerHTML={{ __html: highlightText(item.data.verse.textUthmani, item.data.highlights) }} />;
       case 'surah': return `${item.data.versesCount} ${t('verse')}`;
       case 'reciter': return item.data.style || '';
-      case 'radio': return t('radios_page_title');
-      case 'tv': return t('tv_page_title');
       case 'feature': return t(item.data.subtitleKey);
+      case 'radio': return t('search_category_radios');
+      case 'tv': return t('search_category_tv');
     }
   };
 
@@ -268,7 +274,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 </div>
               ) : (
                 <div className="p-8 text-center text-gray-500">
-                  {t('search_global_placeholder')}
+                  {t('search_global_subtitle')}
                 </div>
               )}
             </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { Home, BookCopy, Radio, Tv, AppWindow, Bookmark, Search, LucideIcon } from 'lucide-react';
+import { Home, BookCopy, Tv, Bot, BrainCircuit, MoreHorizontal, Search, LucideIcon } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { featureLinks } from '../../data/features';
 
@@ -8,17 +8,18 @@ export function Sidebar() {
   const { t, language } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
 
-  const mainNavLinks = [
+  const mainNavLinks: { to: string, text: string, icon: LucideIcon }[] = [
     { to: '/', text: t('home'), icon: Home },
     { to: '/surahs', text: t('surahs'), icon: BookCopy },
-    { to: '/radios', text: t('radios_page_title'), icon: Radio },
-    { to: '/tv', text: t('tv_page_title'), icon: Tv },
-    { to: '/bookmarks', text: t('bookmarks'), icon: Bookmark },
-    { to: '/more', text: t('more'), icon: AppWindow },
+    { to: '/media', text: t('media'), icon: Tv },
+    { to: '/assistant', text: t('assistant'), icon: Bot },
+    { to: '/quiz', text: t('quiz_title'), icon: BrainCircuit },
+    { to: '/more', text: t('more'), icon: MoreHorizontal },
   ];
 
   const mainNavPaths = new Set(mainNavLinks.map(l => l.to));
-  const uniqueFeatureLinks = featureLinks.filter(l => !mainNavPaths.has(l.to));
+  
+  const uniqueFeatureLinks = featureLinks.filter(link => !mainNavPaths.has(link.to));
 
   const allLinks: { to: string, title: string, icon: LucideIcon }[] = [
     ...mainNavLinks.map(l => ({...l, title: l.text})),
@@ -37,7 +38,7 @@ export function Sidebar() {
     }`;
 
   return (
-    <aside className="hidden md:flex flex-col w-64 bg-gray-100 dark:bg-space-200 border-l border-gray-200 dark:border-space-100/50">
+    <aside className="hidden md:flex flex-col w-64 bg-gray-100 dark:bg-space-200 border-l border-gray-200 dark:border-space-100/50 flex-shrink-0">
       <div className="flex items-center justify-center h-16 border-b border-gray-200 dark:border-space-100/50 flex-shrink-0">
         <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-md dark:shadow-glow-sm">

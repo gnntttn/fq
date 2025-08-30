@@ -11,6 +11,7 @@ interface SurahCardProps {
 
 export function SurahCard({ surah, index }: SurahCardProps) {
   const { language } = useLanguage();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

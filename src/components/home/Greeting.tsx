@@ -1,13 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sunrise, Sun, Sunset, Flame } from 'lucide-react';
+import { Sunrise, Sun, Sunset } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 
+const getGreeting = (t: (key: any) => string) => {
+  const hour = new Date().getHours();
+  if (hour < 12) {
+    return { text: t('greeting_morning'), icon: Sunrise };
+  }
+  if (hour < 18) {
+    return { text: t('greeting_afternoon'), icon: Sun };
+  }
+  return { text: t('greeting_evening'), icon: Sunset };
+};
+
 export function Greeting() {
   const { t } = useLanguage();
-  const [streak, setStreak] = useLocalStorage('daily-streak', 1);
   const [lastVisit, setLastVisit] = useLocalStorage('last-visit-date', '');
+  const [streak, setStreak] = useLocalStorage('reading-streak', 0);
 
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
@@ -15,7 +26,7 @@ export function Greeting() {
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
       const yesterdayStr = yesterday.toISOString().split('T')[0];
-
+      
       if (lastVisit === yesterdayStr) {
         setStreak(s => s + 1);
       } else {
@@ -25,42 +36,25 @@ export function Greeting() {
     }
   }, []);
 
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) {
-      return { text: t('greeting_morning'), icon: <Sunrise size={28} className="text-blue-600 dark:text-blue-300" /> };
-    } else if (hour < 18) {
-      return { text: t('greeting_afternoon'), icon: <Sun size={28} className="text-blue-600 dark:text-blue-300" /> };
-    } else {
-      return { text: t('greeting_evening'), icon: <Sunset size={28} className="text-blue-600 dark:text-blue-300" /> };
-    }
-  };
-
-  const { text, icon } = getGreeting();
+  const { text, icon: Icon } = getGreeting(t);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="bg-blue-100/60 dark:bg-blue-900/20 border border-blue-200/60 dark:border-blue-500/20 rounded-2xl p-6"
+      transition={{ delay: 0.1 }}
+      className="bg-white/50 dark:bg-space-200/30 dark:backdrop-blur-sm border border-gray-200 dark:border-space-100/50 rounded-2xl p-6 flex items-center justify-between transition-all duration-300 hover:border-primary-light dark:hover:border-accent-dark hover:shadow-lg dark:hover:shadow-glow-sm"
     >
-      <div className="flex justify-between items-center">
-        <div className="flex flex-col items-center">
-          <div className="flex items-center justify-center gap-1 text-yellow-500 dark:text-yellow-400">
-            <span className="text-5xl font-bold text-gray-800 dark:text-white">{streak}</span>
-            <Flame className="fill-current" size={24} />
-          </div>
-          <p className="text-xs text-blue-700 dark:text-blue-300 font-semibold mt-1">{t('streak_text')}</p>
+      <div>
+        <div className="flex items-center gap-3 mb-1">
+          <Icon className="text-primary-dark dark:text-primary-light" size={28} />
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{text}</h1>
         </div>
-        
-        <div className="text-right">
-          <div className="flex items-center justify-end gap-3 text-blue-700 dark:text-white">
-            <h1 className="text-3xl font-bold font-arabic">{text}</h1>
-            {icon}
-          </div>
-          <p className="text-blue-600 dark:text-blue-300/80 mt-1 font-sans-arabic">{t('main_subtitle')}</p>
-        </div>
+        <p className="text-gray-500 dark:text-gray-400">{t('main_subtitle')}</p>
+      </div>
+      <div className="text-center">
+        <p className="text-4xl font-bold text-primary dark:text-primary-light">{streak}</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400">{t('streak_text')}</p>
       </div>
     </motion.div>
   );
